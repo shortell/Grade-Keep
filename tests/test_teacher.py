@@ -9,7 +9,6 @@ class Test_Teacher(unittest.TestCase):
     def setUp(self):
         initialize_database()
         seed_database()
-        
 
     def test_create_teacher_successfully(self):
         actual = create_teacher("johnSmith123", "password")
@@ -17,8 +16,18 @@ class Test_Teacher(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_create_teacher_failed(self):
-        actual = create_teacher("sv123", "password") 
+        actual = create_teacher("sv123", "password")
         expected = False
+        self.assertEqual(actual, expected)
+
+    def test_get_teacher_successfully(self):
+        actual = get_teacher('sv123', 'password')
+        expected = [(1, 'Sidney', 'Velazquez'),]
+        self.assertEqual(actual, expected)
+
+    def test_get_teacher_failed(self):
+        actual = get_teacher('sv124', 'password1')
+        expected = []
         self.assertEqual(actual, expected)
 
     def test_update_teacher(self):
@@ -27,7 +36,6 @@ class Test_Teacher(unittest.TestCase):
         SELECT id, first_name, last_name FROM teachers
         WHERE id = 1;
         """
-        expected = [(1, "John", "Smith"),]
+        expected = [(1, "John", "Smith"), ]
         actual = exec_get_all(query)
         self.assertEqual(actual, expected)
-
