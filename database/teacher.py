@@ -1,12 +1,17 @@
-from database.postgres_utils import exec_commit, exec_get_all
+from database.postgres_utils import exec_commit, exec_get_one
 from database.db_utils import hash_password
 import psycopg2
+
+
+"""
+all the functions a teacher user will call
+"""
 
 
 def create_teacher(username, password):
     """
     attempts to add record to teacher table if username is unique
-    unique id generated, first and last name set to empty strings
+    teachers are created with a unique id generated, first and last name set to empty strings
 
     :param username: a string
     :param password: a string that gets hashed
@@ -36,7 +41,7 @@ def get_teacher(username, password):
     FROM teachers
     WHERE username = %s AND password = %s;
     """
-    return exec_get_all(query, (username, hash_password(password)))
+    return exec_get_one(query, (username, hash_password(password)))
 
 
 def update_teacher(id, first_name, last_name):
@@ -54,10 +59,11 @@ def update_teacher(id, first_name, last_name):
     """
     exec_commit(query, (first_name, last_name, id))
 
+
 def delete_teacher(id, password):
     """
     deletes a teacher from the table
-    
+
     :param id: an int
     :param password: a string that gets hashed
     """
@@ -66,3 +72,17 @@ def delete_teacher(id, password):
     WHERE id = %s AND password = %s;
     """
     exec_commit(query, (id, hash_password(password)))
+
+
+def create_class(title, teacher_id):
+    """
+    creates a class for a teacher with a given title
+
+    :param title: a string
+    :param teacher_id: an int
+    """
+    query = """
+    INSERT INTO classes (title, teacher_id)
+    VALUES (%s, %s);
+    """
+    exec_commit(query, (title, teacher_id))

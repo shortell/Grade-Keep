@@ -1,6 +1,6 @@
 import unittest
 from database.db_utils import initialize_database, seed_database
-from database.postgres_utils import exec_get_all
+from database.postgres_utils import *
 from database.teacher import *
 
 
@@ -9,6 +9,8 @@ class Test_Teacher(unittest.TestCase):
     def setUp(self):
         initialize_database()
         seed_database()
+
+    # testing teacher related functions
 
     def test_create_teacher_successfully(self):
         actual = create_teacher("johnSmith123", "password")
@@ -22,12 +24,12 @@ class Test_Teacher(unittest.TestCase):
 
     def test_get_teacher_successfully(self):
         actual = get_teacher('sv123', 'password')
-        expected = [(1, 'Sidney', 'Velazquez'), ]
+        expected = (1, 'Sidney', 'Velazquez')
         self.assertEqual(actual, expected)
 
     def test_get_teacher_failed(self):
         actual = get_teacher('sv124', 'password1')
-        expected = []
+        expected = None
         self.assertEqual(actual, expected)
 
     def test_update_teacher(self):
@@ -48,3 +50,16 @@ class Test_Teacher(unittest.TestCase):
         delete_teacher(3, 'password')
         post_deletion_count = exec_get_all(query)[0][0]
         self.assertEqual(pre_deletion_count, (post_deletion_count + 1))
+
+    # testing teachers control over classes
+
+    def test_create_class(self):
+        create_class("Statistics", 3)
+        query = """
+        SELECT * FROM classes
+        WHERE id = 6;
+        """
+        actual = exec_get_one(query)
+        expected = (6, "Statistics", 3)
+        self.assertEqual(actual, expected)
+
