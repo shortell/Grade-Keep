@@ -53,3 +53,16 @@ def update_teacher(id, first_name, last_name):
     WHERE id = %s;
     """
     exec_commit(query, (first_name, last_name, id))
+
+def delete_teacher(id, password):
+    """
+    deletes a teacher from the table
+    
+    :param id: an int
+    :param password: a string that gets hashed
+    """
+    query = """
+    DELETE FROM teachers
+    WHERE id = %s AND password = %s;
+    """
+    exec_commit(query, (id, hash_password(password)))

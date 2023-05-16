@@ -22,7 +22,7 @@ class Test_Teacher(unittest.TestCase):
 
     def test_get_teacher_successfully(self):
         actual = get_teacher('sv123', 'password')
-        expected = [(1, 'Sidney', 'Velazquez'),]
+        expected = [(1, 'Sidney', 'Velazquez'), ]
         self.assertEqual(actual, expected)
 
     def test_get_teacher_failed(self):
@@ -39,3 +39,12 @@ class Test_Teacher(unittest.TestCase):
         expected = [(1, "John", "Smith"), ]
         actual = exec_get_all(query)
         self.assertEqual(actual, expected)
+
+    def test_delete_teacher(self):
+        query = """
+        SELECT COUNT(*) FROM teachers;
+        """
+        pre_deletion_count = exec_get_all(query)[0][0]
+        delete_teacher(3, 'password')
+        post_deletion_count = exec_get_all(query)[0][0]
+        self.assertEqual(pre_deletion_count, (post_deletion_count + 1))
