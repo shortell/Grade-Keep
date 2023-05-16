@@ -3,7 +3,8 @@ CREATE TABLE teachers (
     first_name text DEFAULT '',
     last_name text DEFAULT '',
     username text NOT NULL,
-    password text NOT NULL
+    password text NOT NULL,
+    UNIQUE(username)
 );
 
 CREATE TABLE students (
@@ -11,7 +12,8 @@ CREATE TABLE students (
     first_name text NOT NULL DEFAULT '',
     last_name text NOT NULL DEFAULT '',
     username text NOT NULL,
-    password text NOT NULL
+    password text NOT NULL,
+    UNIQUE(username)
 );
 
 CREATE TABLE classes (
@@ -31,6 +33,7 @@ CREATE TABLE assignments (
     title text NOT NULL,
     instructions text NOT NULL,
     class_id integer NOT NULL
+    
 );
 
 CREATE TABLE submissions (
@@ -42,6 +45,7 @@ CREATE TABLE submissions (
 
 CREATE TABLE grades (
     id SERIAL NOT NULL PRIMARY KEY,
+    title text NOT NULL,
     points_earned integer DEFAULT NULL,
     total_points integer NOT NULL,
     enrollment_id integer NOT NULL references enrollments(id)
