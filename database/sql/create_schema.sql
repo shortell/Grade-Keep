@@ -17,27 +17,27 @@ CREATE TABLE students (
 CREATE TABLE classes (
     id SERIAL NOT NULL PRIMARY KEY,
     title text NOT NULL,
-    teacher_id integer NOT NULL references teachers(id)
+    teacher_id integer NOT NULL 
 );
 
 CREATE TABLE enrollments (
     id SERIAL NOT NULL PRIMARY KEY,
-    student_id integer NOT NULL references students(id),
-    class_id integer NOT NULL references classes(id)
+    student_id integer NOT NULL,
+    class_id integer NOT NULL
 );
 
 CREATE TABLE assignments (
     id SERIAL NOT NULL,
     title text NOT NULL,
     instructions text NOT NULL,
-    class_id integer NOT NULL references classes(id)
+    class_id integer NOT NULL
 );
 
 CREATE TABLE submissions (
     id SERIAL NOT NULL,
     response text,
-    assignment_id integer NOT NULL references assignments(id),
-    student_id integer NOT NULL references students(id)
+    assignment_id integer NOT NULL,
+    student_id integer NOT NULL
 );
 
 CREATE TABLE grades (
