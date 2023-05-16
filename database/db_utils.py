@@ -27,6 +27,12 @@ def initialize_database():
     delete_database()
     create_database()
 
+def seed_database():
+    """
+    seeds the database for testing purposes
+    """
+    exec_sql_file("sql/seed_database.sql")
+
 
 def hash_password(text):
     tokens = bytes(text.encode())
