@@ -1,3 +1,7 @@
+
+
+import hashlib
+
 from database.postgres_utils import exec_sql_file
 
 
@@ -22,3 +26,8 @@ def initialize_database():
     """
     delete_database()
     create_database()
+
+
+def hash_password(text):
+    tokens = bytes(text.encode())
+    return hashlib.sha256(tokens).hexdigest()

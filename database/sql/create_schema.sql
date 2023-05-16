@@ -1,15 +1,15 @@
 CREATE TABLE teachers (
     id SERIAL NOT NULL PRIMARY KEY,
-    first_name text NOT NULL,
-    last_name text NOT NULL,
+    first_name text DEFAULT '',
+    last_name text DEFAULT '',
     username text NOT NULL,
     password text NOT NULL
 );
 
 CREATE TABLE students (
     id SERIAL NOT NULL PRIMARY KEY,
-    first_name text NOT NULL,
-    last_name text NOT NULL,
+    first_name text NOT NULL DEFAULT '',
+    last_name text NOT NULL DEFAULT '',
     username text NOT NULL,
     password text NOT NULL
 );
@@ -42,7 +42,7 @@ CREATE TABLE submissions (
 
 CREATE TABLE grades (
     id SERIAL NOT NULL PRIMARY KEY,
-    points_earned integer,
+    points_earned integer DEFAULT NULL,
     total_points integer NOT NULL,
     enrollment_id integer NOT NULL references enrollments(id)
 );
