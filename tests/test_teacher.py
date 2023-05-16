@@ -63,3 +63,27 @@ class Test_Teacher(unittest.TestCase):
         expected = (6, "Statistics", 3)
         self.assertEqual(actual, expected)
 
+    def test_get_classes(self):
+        actual = get_classes(3)
+        expected = [(4, 'AP US History'), (5, 'Global Studies')]
+        self.assertEqual(actual, expected)
+
+    def test_update_classes(self):
+        update_class(1, 'AP Calculus AB')
+        query = """
+        SELECT * FROM
+        classes
+        WHERE id = 1;
+        """
+        actual = exec_get_one(query)
+        expected = (1, 'AP Calculus AB', 1)
+        self.assertEqual(actual, expected)
+
+    def test_delete_teacher(self):
+        query = """
+        SELECT COUNT(*) FROM classes;
+        """
+        pre_deletion_count = exec_get_all(query)[0][0]
+        delete_class(3)
+        post_deletion_count = exec_get_all(query)[0][0]
+        self.assertEqual(pre_deletion_count, (post_deletion_count + 1))
