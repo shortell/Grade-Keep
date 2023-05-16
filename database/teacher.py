@@ -20,3 +20,18 @@ def create_teacher(username, password):
         return True
     except psycopg2.errors.UniqueViolation:
         return False
+    
+def update_teacher(id, first_name, last_name):
+    """
+    updates the teachers first and last name
+
+    :param id: an int
+    :param first_name: a string
+    :param last_name: a string
+    """
+    query = """
+    UPDATE teachers
+    SET first_name = %s, last_name = %s
+    WHERE id = %s;
+    """
+    exec_commit(query, (first_name, last_name, id))

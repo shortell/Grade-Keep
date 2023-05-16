@@ -20,3 +20,14 @@ class Test_Teacher(unittest.TestCase):
         actual = create_teacher("sv123", "password") 
         expected = False
         self.assertEqual(actual, expected)
+
+    def test_update_teacher(self):
+        update_teacher(1, "John", "Smith")
+        query = """
+        SELECT id, first_name, last_name FROM teachers
+        WHERE id = 1;
+        """
+        expected = [(1, "John", "Smith"),]
+        actual = exec_get_all(query)
+        self.assertEqual(actual, expected)
+
