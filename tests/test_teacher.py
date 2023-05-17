@@ -161,6 +161,48 @@ class Test_Teacher(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_get_student(self):
-        expected = (4, 'Valentina', 'Norman')
+        expected = (4, 'Norman', 'Valentina')
         actual = get_student(4)
+        self.assertEqual(actual, expected)
+
+    # test teachers ability to control grades
+
+    def test_create_grade_with_earned_points(self):
+        create_grade("HW#1", 10, 1, 9)
+        query = """
+        SELECT title, points_earned, total_points FROM grades
+        WHERE id = 5;
+        """
+        expected = ("HW#1", 9, 10)
+        actual = exec_get_one(query)
+        self.assertEqual(actual, expected)
+
+    def test_create_grade_with_out_earned_points(self):
+        create_grade("HW#1", 10, 1)
+        query = """
+        SELECT title, points_earned, total_points FROM grades
+        WHERE id = 5;
+        """
+        expected = ("HW#1", None, 10)
+        actual = exec_get_one(query)
+        self.assertEqual(actual, expected)
+
+    def test_get_grades(self):
+        expected = [
+            (1, 'HW#1', None),
+            (2, 'HW#2', 100.0),
+            (3, 'HW#3', 50.0),
+            (4, 'HW#4', 30.0)
+        ]
+        actual = get_grades(1)
+        self.assertEqual(actual, expected)
+
+    def test_get_grade_with_null_earned_points(self):
+        expected = ('HW#1', None, 100.0)
+        actual = get_grade(1)
+        self.assertEqual(actual, expected)
+
+    def test_get_grade_with_earned_points(self):
+        expected = ('HW#3', 50.0, 100.0)
+        actual = get_grade(3)
         self.assertEqual(actual, expected)

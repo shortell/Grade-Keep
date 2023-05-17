@@ -260,7 +260,7 @@ def get_students(class_id):
     :returns: a list of tuples
     """
     query = """
-    SELECT enrollments.id, students.last_name, students.first_name 
+    SELECT enrollments.id, students.last_name, students.first_name
     FROM enrollments
     INNER JOIN students ON enrollments.student_id = students.id
     WHERE enrollments.class_id = %s
@@ -277,7 +277,7 @@ def get_student(enrollments_id):
     :returns: a tuple
     """
     query = """
-    SELECT enrollments.id, students.last_name, students.first_name 
+    SELECT enrollments.id, students.last_name, students.first_name
     FROM enrollments
     INNER JOIN students ON enrollments.student_id = students.id
     WHERE enrollments.id = %s
@@ -286,3 +286,63 @@ def get_student(enrollments_id):
     return exec_get_one(query, (enrollments_id,))
 
 
+def create_grade(title, total_points, enrollment_id, points_earned=None):
+    """
+    creates a grade for a given enrollment
+
+    :param title: a string
+    :param total_points: an int
+    :param enrollment_id: an int
+    """
+    query = """
+    INSERT INTO grades (title, points_earned, total_points, enrollment_id)
+    VALUES(%s, %s, %s, %s);
+    """
+    exec_commit(query, (title, points_earned, total_points, enrollment_id))
+
+
+def format_grades(results):
+    formatted_results = []
+    for entry in results:
+        if entry[2] is None:
+            formatted_results.append((entry[0], entry[1], entry[2]))
+        else:
+            formatted_results.append(
+                (entry[0], entry[1], float(entry[2]) * 100))
+    return formatted_results
+
+
+def get_grades(enrollment_id):
+    """
+    gets grades of a certain student in a certain class
+
+    :param enrollment_id: an int
+    :returns: a list of tuples
+    """
+    query = """
+    SELECT id, title, (points_earned / total_points)
+    FROM grades
+    WHERE enrollment_id = %s
+    ORDER BY title ASC;
+    """
+    results = exec_get_all(query, (enrollment_id,))
+    return format_grades(results)
+
+
+def get_grade(grade_id):
+    """
+    gets a given grade
+
+    :param grade_id: an int
+    :returns: a tuple
+    """
+    query = """
+    SELECT title, points_earned, total_points
+    FROM grades
+    WHERE id = %s;
+    """
+    result = exec_get_one(query, (grade_id,))
+    if result[1] is None:
+        return (result[0], result[1], float(result[2]))
+    else:
+        return (result[0], float(result[1]), float(result[2]))
