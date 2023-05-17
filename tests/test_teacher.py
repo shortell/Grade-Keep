@@ -198,11 +198,11 @@ class Test_Teacher(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_get_grade_with_null_earned_points(self):
-        expected = ('HW#1', None, 100.0)
+        expected = (1, 'HW#1', None, 100.0)
         actual = get_grade(1)
         self.assertEqual(actual, expected)
 
     def test_get_grade_with_earned_points(self):
-        expected = ('HW#3', 50.0, 100.0)
+        expected = (3, 'HW#3', 50.0, 100.0)
         actual = get_grade(3)
         self.assertEqual(actual, expected)

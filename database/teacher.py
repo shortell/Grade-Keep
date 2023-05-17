@@ -285,6 +285,8 @@ def get_student(enrollments_id):
     """
     return exec_get_one(query, (enrollments_id,))
 
+# teachers ability to control grades
+
 
 def create_grade(title, total_points, enrollment_id, points_earned=None):
     """
@@ -337,12 +339,12 @@ def get_grade(grade_id):
     :returns: a tuple
     """
     query = """
-    SELECT title, points_earned, total_points
+    SELECT id, title, points_earned, total_points
     FROM grades
     WHERE id = %s;
     """
     result = exec_get_one(query, (grade_id,))
-    if result[1] is None:
-        return (result[0], result[1], float(result[2]))
+    if result[2] is None:
+        return (result[0], result[1], result[2], float(result[3]))
     else:
-        return (result[0], float(result[1]), float(result[2]))
+        return (result[0], result[1], float(result[2]), float(result[3]))
