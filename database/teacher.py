@@ -7,6 +7,8 @@ import psycopg2
 all the functions a teacher user will call
 """
 
+# teachers capabilities to control their own profile
+
 
 def create_teacher(username, password):
     """
@@ -73,6 +75,8 @@ def delete_teacher(teacher_id, password):
     """
     exec_commit(query, (teacher_id, hash_password(password)))
 
+# teachers capabilities to control classes
+
 
 def create_class(title, teacher_id):
     """
@@ -129,3 +133,80 @@ def delete_class(class_id):
     WHERE id = %s;
     """
     exec_commit(query, (class_id,))
+
+# teachers capabilities to control assignments
+
+
+def create_assignment(title, instructions, class_id):
+    """
+    creates an assignment with a name and instructions attached to a certain record in the classes table
+
+    :param title: a string
+    :param instructions: a string
+    :param class_id: an int
+    """
+    query = """
+    INSERT INTO assignments (title, instructions, class_id)
+    VALUES (%s, %s, %s)
+    """
+    exec_commit(query, (title, instructions, class_id))
+
+
+def get_assignments(class_id):
+    """
+    gets all the assignments from the referenced class
+
+    :param class_id: an int
+    :returns: a list of tuples
+    """
+    query = """
+    SELECT id, title
+    FROM assignments
+    WHERE class_id = %s
+    ORDER BY title DESC;
+    """
+    return exec_get_all(query, (class_id,))
+
+
+def get_assignment(assignment_id):
+    """
+    get an assignment by its id
+
+    :param assignment_id: an int
+    :returns: a tuple
+    """
+    query = """
+    SELECT id, title, instructions
+    FROM assignments
+    WHERE id = %s;
+    """
+    return exec_get_one(query, (assignment_id,))
+
+
+def update_assignment(assignment_id, title, instructions):
+    """
+    updates the title and instructions of a given assignment
+
+    :param assignment_id: an int
+    :param title: a string
+    :param instructions: a string
+    """
+    query = """
+    UPDATE assignments
+    SET title = %s, instructions = %s
+    WHERE id = %s;
+    """
+    exec_commit(query, (title, instructions, assignment_id))
+
+
+def delete_assignment(assignment_id):
+    """
+    deletes the assignment attached to the id
+
+    :param assignment_id: an int
+    """
+    query = """
+    DELETE FROM assignments
+    WHERE id = %s;
+    """
+    exec_commit(query, (assignment_id,))
