@@ -152,3 +152,15 @@ class Test_Teacher(unittest.TestCase):
         expected = (1, 'Essay #1', 'Lorem ipsum...', 'Lawson', 'Xanthe')
         actual = get_submission(1)
         self.assertEqual(actual, expected)
+
+    # test teachers ability to grade and view students
+
+    def test_get_students(self):
+        expected = [(1, 'Lawson', 'Xanthe'), (2, 'Stanton', 'Amie')]
+        actual = get_students(1)
+        self.assertEqual(actual, expected)
+
+    def test_get_student(self):
+        expected = (4, 'Valentina', 'Norman')
+        actual = get_student(4)
+        self.assertEqual(actual, expected)
