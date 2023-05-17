@@ -39,23 +39,33 @@ INSERT INTO assignments (title, instructions, class_id) -- id: 5
 VALUES ('HW#2', 'How did John D. Rockefeller contribute too...', 4);
 
 -- students
-INSERT INTO students (first_name, last_name, username, password) -- id: 5
+INSERT INTO students (first_name, last_name, username, password) -- id: 1
 VALUES ('Xanthe', 'Lawson', 'xl123', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8');
-INSERT INTO students (first_name, last_name, username, password) -- id: 5
+INSERT INTO students (first_name, last_name, username, password) -- id: 2
 VALUES ('Valentina', 'Norman', 'vn456', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8');
-INSERT INTO students (first_name, last_name, username, password) -- id: 5
+INSERT INTO students (first_name, last_name, username, password) -- id: 3
 VALUES ('Amie', 'Stanton', 'as789', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8');
 
 -- submissions
 INSERT INTO submissions (response, assignment_id, student_id) -- id: 1
 VALUES ('Lorem ipsum...', 1, 1);
-INSERT INTO submissions (response, assignment_id, student_id) -- id: 1
+INSERT INTO submissions (response, assignment_id, student_id) -- id: 2
 VALUES ('Lorem ipsum...', 1, 2);
-INSERT INTO submissions (response, assignment_id, student_id) -- id: 1
+INSERT INTO submissions (response, assignment_id, student_id) -- id: 3
 VALUES ('Lorem ipsum...', 1, 3);
-INSERT INTO submissions (response, assignment_id, student_id) -- id: 1
+INSERT INTO submissions (response, assignment_id, student_id) -- id: 4
 VALUES ('U', 2, 1);
-INSERT INTO submissions (response, assignment_id, student_id) -- id: 1
+INSERT INTO submissions (response, assignment_id, student_id) -- id: 5
 VALUES ('U', 2, 2);
-INSERT INTO submissions (response, assignment_id, student_id) -- id: 1
+INSERT INTO submissions (response, assignment_id, student_id) -- id: 6
 VALUES ('U', 2, 3);
+
+-- enrollments
+INSERT INTO enrollments (student_id, class_id) -- id: 1
+VALUES (1, 1);
+INSERT INTO enrollments (student_id, class_id) -- id: 2
+VALUES (3, 1);
+INSERT INTO enrollments (student_id, class_id) -- id: 3
+VALUES (1, 2);
+INSERT INTO enrollments (student_id, class_id) -- id: 4
+VALUES (2, 2);
