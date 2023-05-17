@@ -105,8 +105,8 @@ class Test_Teacher(unittest.TestCase):
     def test_get_assignments(self):
         actual = get_assignments(5)
         expected = [
-            (4, 'HW#5'),
-            (1, 'Essay #1')
+            (1, 'Essay #1'),
+            (4, 'HW#5')
         ]
         self.assertEqual(actual, expected)
 
@@ -123,7 +123,8 @@ class Test_Teacher(unittest.TestCase):
         FROM assignments
         WHERE id = 1;
         """
-        expected = ('Essay #2', 'Write an essay on the French Revolution and explain...')
+        expected = (
+            'Essay #2', 'Write an essay on the French Revolution and explain...')
         actual = exec_get_one(query)
         self.assertEqual(actual, expected)
 
@@ -135,3 +136,19 @@ class Test_Teacher(unittest.TestCase):
         delete_assignment(3)
         post_deletion_count = exec_get_all(query)[0][0]
         self.assertEqual(pre_deletion_count, (post_deletion_count + 1))
+
+    # test teachers control over submissions
+
+    def test_get_submissions(self):
+        expected = [
+            (1, 'Essay #1', 'Lawson', 'Xanthe'),
+            (2, 'Essay #1', 'Norman', 'Valentina'),
+            (3, 'Essay #1', 'Stanton', 'Amie')
+        ]
+        actual = get_submissions(1)
+        self.assertEqual(actual, expected)
+
+    def test_get_submission(self):
+        expected = (1, 'Essay #1', 'Lorem ipsum...', 'Lawson', 'Xanthe')
+        actual = get_submission(1)
+        self.assertEqual(actual, expected)

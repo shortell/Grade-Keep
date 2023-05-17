@@ -101,7 +101,8 @@ def get_classes(teacher_id):
     query = """
     SELECT id, title
     FROM classes
-    WHERE teacher_id = %s;
+    WHERE teacher_id = %s
+    ORDER BY title ASC;
     """
     results = exec_get_all(query, (teacher_id,))
     return results
@@ -163,7 +164,7 @@ def get_assignments(class_id):
     SELECT id, title
     FROM assignments
     WHERE class_id = %s
-    ORDER BY title DESC;
+    ORDER BY title ASC;
     """
     return exec_get_all(query, (class_id,))
 
@@ -210,3 +211,40 @@ def delete_assignment(assignment_id):
     WHERE id = %s;
     """
     exec_commit(query, (assignment_id,))
+
+# teachers capabilities to view submissions
+
+
+def get_submissions(assignment_id):
+    """
+    get submissions by an assignment id
+
+    :param assignment_id: an int
+    :returns: a list of tuples
+    """
+    query = """
+    SELECT submissions.id, assignments.title, students.last_name, students.first_name
+    FROM ((submissions
+    INNER JOIN assignments ON submissions.assignment_id = assignments.id)
+    INNER JOIN students ON submissions.student_id = students.id)
+    WHERE assignment_id = %s
+    ORDER BY students.last_name ASC;
+    """
+    return exec_get_all(query, (assignment_id,))
+
+
+def get_submission(submission_id):
+    """
+    get submissions by an assignment id
+
+    :param assignment_id: an int
+    :returns: a list of tuples
+    """
+    query = """
+    SELECT submissions.id, assignments.title, submissions.response, students.last_name, students.first_name
+    FROM ((submissions
+    INNER JOIN assignments ON submissions.assignment_id = assignments.id)
+    INNER JOIN students ON submissions.student_id = students.id)
+    WHERE submissions.id = %s;
+    """
+    return exec_get_one(query, (submission_id,))
