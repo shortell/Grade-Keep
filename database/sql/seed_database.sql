@@ -69,3 +69,13 @@ INSERT INTO enrollments (student_id, class_id) -- id: 3
 VALUES (1, 2);
 INSERT INTO enrollments (student_id, class_id) -- id: 4
 VALUES (2, 2);
+
+-- grades
+INSERT INTO grades (title, points_earned, total_points, enrollment_id) -- id: 1
+VALUES ('HW#1', NULL, 100, 1);
+INSERT INTO grades (title, points_earned, total_points, enrollment_id) -- id: 2
+VALUES ('HW#2', 100, 100, 1);
+INSERT INTO grades (title, points_earned, total_points, enrollment_id) -- id: 3
+VALUES ('HW#3', 50, 100, 1);
+INSERT INTO grades (title, points_earned, total_points, enrollment_id) -- id: 4
+VALUES ('HW#4', 30, 100, 1);

@@ -46,7 +46,7 @@ CREATE TABLE submissions (
 CREATE TABLE grades (
     id SERIAL NOT NULL PRIMARY KEY,
     title text NOT NULL,
-    points_earned integer DEFAULT NULL,
-    total_points integer NOT NULL,
+    points_earned decimal DEFAULT NULL,
+    total_points decimal NOT NULL,
     enrollment_id integer NOT NULL references enrollments(id)
 );
