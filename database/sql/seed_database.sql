@@ -21,3 +21,19 @@ VALUES ('AP US History', 3);
 
 INSERT INTO classes (title, teacher_id) -- id: 5
 VALUES ('Global Studies', 3);
+
+-- assignments
+INSERT INTO assignments (title, instructions, class_id) -- id: 1
+VALUES ('Essay #1', 'Write an essay on Ancient Greece and explain...', 5);
+
+INSERT INTO assignments (title, instructions, class_id) -- id: 2
+VALUES ('HW#1', 'Graph the following equations f(x)=x^2...', 1);
+
+INSERT INTO assignments (title, instructions, class_id) -- id: 3
+VALUES ('HW#1', 'Graph the following equations 1. f(x)=x^2...', 2);
+
+INSERT INTO assignments (title, instructions, class_id) -- id: 4
+VALUES ('HW#5', 'Explain how the World War I affected...', 5);
+
+INSERT INTO assignments (title, instructions, class_id) -- id: 5
+VALUES ('HW#2', 'How did John D. Rockefeller contribute too...', 4);
