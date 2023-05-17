@@ -40,11 +40,11 @@ VALUES ('HW#2', 'How did John D. Rockefeller contribute too...', 4);
 
 -- students
 INSERT INTO students (first_name, last_name, username, password) -- id: 5
-VALUES ('Xanthe' 'Lawson', 'xl123', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8');
+VALUES ('Xanthe', 'Lawson', 'xl123', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8');
 INSERT INTO students (first_name, last_name, username, password) -- id: 5
-VALUES ('Valentina' 'Norman', 'vn456', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8');
+VALUES ('Valentina', 'Norman', 'vn456', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8');
 INSERT INTO students (first_name, last_name, username, password) -- id: 5
-VALUES ('Amie' 'Stanton', 'as789', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8');
+VALUES ('Amie', 'Stanton', 'as789', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8');
 
 -- submissions
 INSERT INTO submissions (response, assignment_id, student_id) -- id: 1
