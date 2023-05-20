@@ -16,45 +16,44 @@ CREATE TABLE students (
     UNIQUE(username)
 );
 
-CREATE TABLE classes (
+CREATE TABLE courses (
     id SERIAL NOT NULL PRIMARY KEY,
     title text NOT NULL,
-    teacher_id integer NOT NULL 
+    teacher_id integer NOT NULL references teachers(id) ON DELETE CASCADE
 );
 
 CREATE TABLE enrollments (
     id SERIAL NOT NULL PRIMARY KEY,
-    student_id integer NOT NULL references students(id),
-    class_id integer NOT NULL references classes(id)
+    student_id integer NOT NULL references students(id) ON DELETE CASCADE,
+    course_id integer NOT NULL references courses(id) ON DELETE CASCADE
 );
 
 CREATE TABLE assignments (
-    id SERIAL NOT NULL,
+    id SERIAL NOT NULL PRIMARY KEY,
     title text NOT NULL,
     instructions text NOT NULL,
-    due_date_time TIMESTAMP NOT NULL,
-    class_id integer NOT NULL references classes(id)
-    
+    due TIMESTAMP NOT NULL,
+    course_id integer NOT NULL references courses(id) ON DELETE CASCADE
 );
 
 CREATE TABLE submissions (
-    id SERIAL NOT NULL,
+    id SERIAL NOT NULL PRIMARY KEY,
     response text,
-    assignment_id integer NOT NULL references assignments(id),
-    student_id integer NOT NULL references students(id),
-    submitted_date_time TIMESTAMP NOT NULL
+    turned_in TIMESTAMP NOT NULL,
+    assignment_id integer NOT NULL references assignments(id) ON DELETE CASCADE,
+    student_id integer NOT NULL references students(id) ON DELETE CASCADE
 );
 
 CREATE TABLE grades (
     id SERIAL NOT NULL PRIMARY KEY,
     title text NOT NULL,
     total_points decimal NOT NULL,
-    class_id integer NOT NULL references classes(id)
+    course_id integer NOT NULL references courses(id) ON DELETE CASCADE
 );
 
 CREATE TABLE scores (
     id SERIAL NOT NULL PRIMARY KEY,
     points_earned decimal,
-    grade_id integer NOT NULL references grades(id),
-    student_id integer NOT NULL references students(id)
-)
+    grade_id integer NOT NULL references grades(id) ON DELETE CASCADE,
+    student_id integer NOT NULL references students(id) ON DELETE CASCADE
+);

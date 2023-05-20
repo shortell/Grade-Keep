@@ -1,7 +1,4 @@
-
-
 import hashlib
-
 from database.postgres_utils import exec_sql_file
 
 
@@ -27,6 +24,7 @@ def initialize_database():
     delete_database()
     create_database()
 
+
 def seed_database():
     """
     seeds the database for testing purposes
@@ -34,6 +32,10 @@ def seed_database():
     exec_sql_file("sql/seed_database.sql")
 
 
-def hash_password(text):
-    tokens = bytes(text.encode())
+def hash_password(password):
+    tokens = bytes(password.encode())
     return hashlib.sha256(tokens).hexdigest()
+
+
+def get_current_datetime():
+    return datetime.datetime.now().strftime("%x %X")
