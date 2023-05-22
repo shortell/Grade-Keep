@@ -22,24 +22,29 @@ class Test_Teacher(unittest.TestCase):
         expected = False
         self.assertEqual(actual, expected)
 
-    def test_get_teacher_successfully(self):
-        actual = get_teacher('sv123', 'password')
+    def test_get_teacher(self):
         expected = (1, 'Sidney', 'Velazquez', 'sv123')
+        actual = get_teacher(1)
         self.assertEqual(actual, expected)
 
-    def test_get_teacher_failed(self):
-        actual = get_teacher('sv124', 'password1')
-        expected = None
+    def test_login_successfully(self):
+        actual = login('sv123', 'password')
+        expected = True
         self.assertEqual(actual, expected)
 
-    def test_update_teacher(self):
-        update_teacher(1, "John", "Smith")
-        query = """
-        SELECT id, first_name, last_name FROM teachers
-        WHERE id = 1;
-        """
-        expected = [(1, "John", "Smith"), ]
-        actual = exec_get_all(query)
+    def test_login_failed(self):
+        actual = login('sv124', 'password1')
+        expected = False
+        self.assertEqual(actual, expected)
+
+    def test_update_teacher_successfully(self):
+        expected = True
+        actual = update_teacher(1, "John", "Smith", "jsmith64", "password")
+        self.assertEqual(actual, expected)
+
+    def test_update_teacher_failed(self):
+        expected = False
+        actual = update_teacher(1, "John", "Smith", "fm456", "password")
         self.assertEqual(actual, expected)
 
     def test_delete_teacher(self):
@@ -84,7 +89,7 @@ class Test_Teacher(unittest.TestCase):
         WHERE id = 1;
         """
         actual = exec_get_one(query)
-        expected = (1, 'AP Calculus AB', '', 1)
+        expected = (1, 'AP Calculus AB', 'Default course description', 1)
         self.assertEqual(actual, expected)
 
     def test_delete_course(self):
@@ -183,31 +188,32 @@ class Test_Teacher(unittest.TestCase):
         """
         cur.execute(query)
         expected = [
-            (13, None, 5, 1),
-            (14, None, 5, 3)
+            (13, None, '', 5, 1),
+            (14, None, '', 5, 3)
         ]
         actual = cur.fetchall()
         self.assertEqual(actual, expected)
 
-    def test_get_grades(self):
-        expected = [(1,
-                     'HW#1',
-                     Decimal('0.46666666666666666667'),
-                     datetime.datetime(2004, 10, 19, 10, 23, 54)),
-                    (2,
-                     'HW#2',
-                     Decimal('0.58333333333333333333'),
-                     datetime.datetime(2004, 10, 19, 10, 23, 54)),
-                    (3,
-                     'HW#3',
-                     Decimal('0.80333333333333333333'),
-                     datetime.datetime(2004, 10, 19, 10, 23, 54)),
-                    (4,
-                     'HW#4',
-                     Decimal('0.96666666666666666667'),
-                     datetime.datetime(2004, 10, 19, 10, 23, 54))
-                    ]
-        actual = get_grades(1)
+    def test_get_all_grades_avg(self):
+        expected = [
+            (4,
+             'HW#4',
+             Decimal('0.96666666666666666667'),
+             datetime.datetime(2004, 10, 25, 10, 23, 54)),
+            (3,
+             'HW#3',
+             Decimal('0.80333333333333333333'),
+             datetime.datetime(2004, 10, 23, 10, 23, 54)),
+            (2,
+             'HW#2',
+             Decimal('0.58333333333333333333'),
+             datetime.datetime(2004, 10, 21, 10, 23, 54)),
+            (1,
+             'HW#1',
+             Decimal('0.46666666666666666667'),
+             datetime.datetime(2004, 10, 19, 10, 23, 54))
+        ]
+        actual = get_all_grades_avg(1)
         self.assertEqual(actual, expected)
 
     def test_update_grade(self):
@@ -247,12 +253,12 @@ class Test_Teacher(unittest.TestCase):
 
     def test_get_score(self):
         expected = ('HW#3', Decimal('66'), Decimal(
-            '100'), 'Norman', 'Valentina')
+            '100'), '', 'Norman', 'Valentina')
         actual = get_score(8)
         self.assertEqual(actual, expected)
 
     def test_update_score(self):
-        update_score(4, 50)
+        update_score(4, 50, 'great work!')
         conn = connect()
         cur = conn.cursor()
         query = """
@@ -260,6 +266,10 @@ class Test_Teacher(unittest.TestCase):
         WHERE id = 4;
         """
         cur.execute(query)
-        expected = (4, Decimal('50'), 2, 1)
+        expected = (4, Decimal('50'), 'great work!', 2, 1)
         actual = cur.fetchone()
         self.assertEqual(actual, expected)
+
+
+if __name__ == '__main__':
+    unittest.main()

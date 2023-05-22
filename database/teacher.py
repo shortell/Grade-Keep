@@ -9,6 +9,7 @@ import psycopg2
 
 def create_teacher(first_name, last_name, username, password):
     """
+    TESTED
     attempts to add record to teacher table if username is unique
     teachers are created with a unique id generated, first and last name set to empty strings
 
@@ -32,6 +33,7 @@ def create_teacher(first_name, last_name, username, password):
 
 def get_teacher(teacher_id):
     """
+    TESTED
     gets a teacher given their id
 
     :param teacher_id: an int
@@ -40,13 +42,14 @@ def get_teacher(teacher_id):
     query = """
     SELECT id, first_name, last_name, username
     FROM teachers
-    WHERE username = %s AND password = %s;
+    WHERE id = %s;
     """
     return exec_get_one(query, (teacher_id,))
 
 
-def get_teacher(username, password):
+def login(username, password):
     """
+    TESTED
     gets a teacher that matches the given username and hashed password
 
     :param username: a string
@@ -58,11 +61,12 @@ def get_teacher(username, password):
     FROM teachers
     WHERE username = %s AND password = %s;
     """
-    return exec_get_one(query, (username, hash_password(password)))
+    return exec_get_one(query, (username, hash_password(password))) is not None
 
 
-def update_teacher(teacher_id, first_name, last_name):
+def update_teacher(teacher_id, first_name, last_name, username, password):
     """
+    TESTED
     updates the teachers first and last name
 
     :param teacher_id: an int
@@ -71,14 +75,20 @@ def update_teacher(teacher_id, first_name, last_name):
     """
     query = """
     UPDATE teachers
-    SET first_name = %s, last_name = %s
+    SET first_name = %s, last_name = %s, username = %s, password = %s
     WHERE id = %s;
     """
-    exec_commit(query, (first_name, last_name, teacher_id))
+    try:
+        exec_commit(query, (first_name, last_name,
+                    username, hash_password(password), teacher_id))
+        return True
+    except psycopg2.errors.UniqueViolation:
+        return False
 
 
 def delete_teacher(teacher_id, password):
     """
+    TESTED
     deletes a teacher from the table
 
     :param teacher_id: an int
@@ -95,6 +105,7 @@ def delete_teacher(teacher_id, password):
 
 def get_students(class_id):
     """
+    TESTED
     for teachers to use
     select all students from a given class
 
@@ -113,6 +124,7 @@ def get_students(class_id):
 
 def get_student(enrollment_id):
     """
+    TESTED
     select a students from a given course
 
     :param enrollment_id: an int
@@ -132,6 +144,7 @@ def get_student(enrollment_id):
 
 def create_course(title, teacher_id):
     """
+    TESTED
     creates a course for a teacher with a given title
 
     :param title: a string
@@ -146,6 +159,7 @@ def create_course(title, teacher_id):
 
 def get_courses(teacher_id):
     """
+    TESTED
     gets courses that a specific teacher is teaching
     :param teacher_id: an int
     :return: a list of tuples
@@ -162,6 +176,7 @@ def get_courses(teacher_id):
 
 def update_course(course_id, title):
     """
+    TESTED
     updates the title of the course
 
     :param course_id: an int
@@ -177,6 +192,7 @@ def update_course(course_id, title):
 
 def delete_course(course_id):
     """
+    TESTED
     deletes a course from the table
 
     :param course_id: an int
@@ -192,6 +208,7 @@ def delete_course(course_id):
 
 def create_assignment(title, instructions, due, course_id):
     """
+    TESTED
     creates an assignment with a name and instructions attached to a certain record in the courses table
 
     :param title: a string
@@ -208,6 +225,7 @@ def create_assignment(title, instructions, due, course_id):
 
 def get_assignments(course_id):
     """
+    TESTED
     gets all the assignments from the referenced course
 
     :param course_id: an int
@@ -217,13 +235,14 @@ def get_assignments(course_id):
     SELECT id, title, due
     FROM assignments
     WHERE course_id = %s
-    ORDER BY title ASC;
+    ORDER BY due DESC;
     """
     return exec_get_all(query, (course_id,))
 
 
 def get_assignment(assignment_id):
     """
+    TESTED
     get an assignment by its id
 
     :param assignment_id: an int
@@ -239,6 +258,7 @@ def get_assignment(assignment_id):
 
 def update_assignment(assignment_id, title, instructions, due_date):
     """
+    TESTED
     updates the title and instructions of a given assignment
 
     :param assignment_id: an int
@@ -256,6 +276,7 @@ def update_assignment(assignment_id, title, instructions, due_date):
 
 def delete_assignment(assignment_id):
     """
+    TESTED
     deletes the assignment attached to the id
 
     :param assignment_id: an int
@@ -271,6 +292,7 @@ def delete_assignment(assignment_id):
 
 def get_submissions(assignment_id):
     """
+    TESTED
     get submissions by an assignment id
 
     :param assignment_id: an int
@@ -289,6 +311,7 @@ def get_submissions(assignment_id):
 
 def get_submission(submission_id):
     """
+    TESTED
     get submissions by an assignment id
 
     :param assignment_id: an int
@@ -304,7 +327,7 @@ def get_submission(submission_id):
     return exec_get_one(query, (submission_id,))
 
 
-# grade table functions
+# grades and scores table functions
 
 def __get_grade_id(title, course_id, cur):
     """
@@ -343,6 +366,7 @@ def __get_student_ids(course_id, cur):
 
 def create_grade(title, total_points, course_id):
     """
+    TESTED
     attempts to create a grade for a given course fails if there is 
     already a grade with the same title in the same course
     if the grade is successfully created then scores for the entire class are created
@@ -372,9 +396,10 @@ def create_grade(title, total_points, course_id):
         return False
 
 
-def get_grades(course_id):
+def get_all_grades_avg(course_id):
     """
-    gets the grades from a specific course
+    TESTED
+    gets the avg of each grade in a specific course
 
     :param course_id: an int
     :returns: a list of tuples
@@ -392,6 +417,7 @@ def get_grades(course_id):
 
 def update_grade(grade_id, title, total_points):
     """
+    TESTED
     creates a grade for a given enrollment
 
     :param grade_id: an int
@@ -408,6 +434,7 @@ def update_grade(grade_id, title, total_points):
 
 def delete_grade(grade_id):
     """
+    TESTED
     deletes a specific grade
 
     :param grade_id: an int
@@ -418,8 +445,6 @@ def delete_grade(grade_id):
     """
     exec_commit(query, (grade_id,))
 
-
-# score table functions
 
 def __create_score(grade_id, student_id, cur):
     """
@@ -440,6 +465,7 @@ def __create_score(grade_id, student_id, cur):
 
 def get_scores(grade_id):
     """
+    TESTED
     gets all the scores from a specific grade
 
     :param grade_id: an int
@@ -458,13 +484,14 @@ def get_scores(grade_id):
 
 def get_score(score_id):
     """
+    TESTED
     gets a specific score
 
     :param score_id: an int
     :returns: a tuple
     """
     query = """
-    SELECT grades.title, scores.points_earned, grades.total_points, students.last_name, students.first_name
+    SELECT grades.title, scores.points_earned, grades.total_points, scores.comment, students.last_name, students.first_name
     FROM ((scores
     INNER JOIN grades ON scores.grade_id = grades.id)
     INNER JOIN students ON scores.student_id = students.id)
@@ -473,8 +500,9 @@ def get_score(score_id):
     return exec_get_one(query, (score_id,))
 
 
-def update_score(score_id, points_earned):
+def update_score(score_id, points_earned, comments=''):
     """
+    TESTED
     updates a specific score
 
     :param score_id: an int
@@ -483,7 +511,7 @@ def update_score(score_id, points_earned):
     """
     query = """
     UPDATE scores
-    SET points_earned = %s
+    SET points_earned = %s, comment = %s
     WHERE id = %s;
     """
-    exec_commit(query, (points_earned, score_id))
+    exec_commit(query, (points_earned, comments, score_id))

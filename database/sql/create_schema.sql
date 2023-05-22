@@ -19,7 +19,7 @@ CREATE TABLE students (
 CREATE TABLE courses (
     id SERIAL NOT NULL PRIMARY KEY,
     title text NOT NULL,
-    summary text DEFAULT '',
+    description text DEFAULT '',
     teacher_id integer NOT NULL references teachers(id) ON DELETE CASCADE
 );
 
@@ -57,6 +57,7 @@ CREATE TABLE grades (
 CREATE TABLE scores (
     id SERIAL NOT NULL PRIMARY KEY,
     points_earned decimal DEFAULT NULL,
+    comment text DEFAULT '',
     grade_id integer NOT NULL references grades(id) ON DELETE CASCADE,
     student_id integer NOT NULL references students(id) ON DELETE CASCADE
 );

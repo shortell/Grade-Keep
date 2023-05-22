@@ -7,16 +7,16 @@ INSERT INTO teachers (first_name, last_name, username, password) -- id: 3, passw
 VALUES ('Neo', 'Brewer', 'nb789', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'); 
 
 -- courses
-INSERT INTO courses (title, teacher_id) -- id: 1
-VALUES ('Algebra I section 01', 1);
-INSERT INTO courses (title, teacher_id) -- id: 2
-VALUES ('Algebra I section 02', 1);
-INSERT INTO courses (title, teacher_id) -- id: 3
-VALUES ('AP U.S. History', 2);
-INSERT INTO courses (title, teacher_id) -- id: 4
-VALUES ('AP US History', 3);
-INSERT INTO courses (title, teacher_id) -- id: 5
-VALUES ('Global Studies', 3);
+INSERT INTO courses (title, description, teacher_id) -- id: 1
+VALUES ('Algebra I section 01', 'Default course description', 1);
+INSERT INTO courses (title, description, teacher_id) -- id: 2
+VALUES ('Algebra I section 02', 'Default course description', 1);
+INSERT INTO courses (title, description, teacher_id) -- id: 3
+VALUES ('AP U.S. History', 'Default course description', 2);
+INSERT INTO courses (title, description, teacher_id) -- id: 4
+VALUES ('AP US History', 'Default course description', 3);
+INSERT INTO courses (title, description, teacher_id) -- id: 5
+VALUES ('Global Studies', 'Default course description', 3);
 
 -- assignments
 INSERT INTO assignments (title, instructions, due, course_id) -- id: 1
@@ -66,11 +66,11 @@ VALUES (2, 2);
 INSERT INTO grades (title, total_points, posted, course_id) -- id: 1
 VALUES ('HW#1', 100, '2004-10-19 10:23:54', 1);
 INSERT INTO grades (title, total_points, posted, course_id) -- id: 2
-VALUES ('HW#2', 100, '2004-10-19 10:23:54', 1);
+VALUES ('HW#2', 100, '2004-10-21 10:23:54', 1);
 INSERT INTO grades (title, total_points, posted, course_id) -- id: 3
-VALUES ('HW#3', 100, '2004-10-19 10:23:54', 1);
+VALUES ('HW#3', 100, '2004-10-23 10:23:54', 1);
 INSERT INTO grades (title, total_points, posted, course_id) -- id: 4
-VALUES ('HW#4', 100, '2004-10-19 10:23:54', 1);
+VALUES ('HW#4', 100, '2004-10-25 10:23:54', 1);
 
 
 -- scores
