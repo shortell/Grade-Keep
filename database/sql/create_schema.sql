@@ -1,7 +1,7 @@
 CREATE TABLE teachers (
     id SERIAL NOT NULL PRIMARY KEY,
-    first_name text DEFAULT '',
-    last_name text DEFAULT '',
+    first_name text,
+    last_name text,
     username text NOT NULL,
     password text NOT NULL,
     UNIQUE(username)
@@ -9,8 +9,8 @@ CREATE TABLE teachers (
 
 CREATE TABLE students (
     id SERIAL NOT NULL PRIMARY KEY,
-    first_name text NOT NULL DEFAULT '',
-    last_name text NOT NULL DEFAULT '',
+    first_name text NOT NULL,
+    last_name text NOT NULL,
     username text NOT NULL,
     password text NOT NULL,
     UNIQUE(username)
@@ -19,6 +19,7 @@ CREATE TABLE students (
 CREATE TABLE courses (
     id SERIAL NOT NULL PRIMARY KEY,
     title text NOT NULL,
+    summary text DEFAULT '',
     teacher_id integer NOT NULL references teachers(id) ON DELETE CASCADE
 );
 
@@ -48,12 +49,14 @@ CREATE TABLE grades (
     id SERIAL NOT NULL PRIMARY KEY,
     title text NOT NULL,
     total_points decimal NOT NULL,
-    course_id integer NOT NULL references courses(id) ON DELETE CASCADE
+    posted TIMESTAMP NOT NULL,
+    course_id integer NOT NULL references courses(id) ON DELETE CASCADE,
+    UNIQUE(title, course_id)
 );
 
 CREATE TABLE scores (
     id SERIAL NOT NULL PRIMARY KEY,
-    points_earned decimal,
+    points_earned decimal DEFAULT NULL,
     grade_id integer NOT NULL references grades(id) ON DELETE CASCADE,
     student_id integer NOT NULL references students(id) ON DELETE CASCADE
 );

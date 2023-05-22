@@ -63,11 +63,41 @@ INSERT INTO enrollments (student_id, course_id) -- id: 4
 VALUES (2, 2);
 
 -- grades
-INSERT INTO grades (title, total_points, course_id) -- id: 1
-VALUES ('HW#1', 100, 1);
-INSERT INTO grades (title, total_points, course_id) -- id: 2
-VALUES ('HW#2', 100, 1);
-INSERT INTO grades (title, total_points, course_id) -- id: 3
-VALUES ('HW#3', 100, 1);
-INSERT INTO grades (title, total_points, course_id) -- id: 4
-VALUES ('HW#4', 100, 1);
+INSERT INTO grades (title, total_points, posted, course_id) -- id: 1
+VALUES ('HW#1', 100, '2004-10-19 10:23:54', 1);
+INSERT INTO grades (title, total_points, posted, course_id) -- id: 2
+VALUES ('HW#2', 100, '2004-10-19 10:23:54', 1);
+INSERT INTO grades (title, total_points, posted, course_id) -- id: 3
+VALUES ('HW#3', 100, '2004-10-19 10:23:54', 1);
+INSERT INTO grades (title, total_points, posted, course_id) -- id: 4
+VALUES ('HW#4', 100, '2004-10-19 10:23:54', 1);
+
+
+-- scores
+INSERT INTO scores (points_earned, grade_id, student_id) -- id: 1
+VALUES (50, 1, 1);
+INSERT INTO scores (points_earned, grade_id, student_id) -- id: 2
+VALUES (70, 1, 2);
+INSERT INTO scores (points_earned, grade_id, student_id) -- id: 3
+VALUES (20, 1, 3);
+
+INSERT INTO scores (points_earned, grade_id, student_id) -- id: 4
+VALUES (0, 2, 1);
+INSERT INTO scores (points_earned, grade_id, student_id) -- id: 5
+VALUES (75, 2, 2);
+INSERT INTO scores (points_earned, grade_id, student_id) -- id: 6
+VALUES (100, 2, 3);
+
+INSERT INTO scores (points_earned, grade_id, student_id) -- id: 7
+VALUES (75, 3, 1);
+INSERT INTO scores (points_earned, grade_id, student_id) -- id: 8
+VALUES (66, 3, 2);
+INSERT INTO scores (points_earned, grade_id, student_id) -- id: 9
+VALUES (100, 3, 3);
+
+INSERT INTO scores (points_earned, grade_id, student_id) -- id: 10
+VALUES (90, 4, 1);
+INSERT INTO scores (points_earned, grade_id, student_id) -- id: 11
+VALUES (100, 4, 2);
+INSERT INTO scores (points_earned, grade_id, student_id) -- id: 12
+VALUES (100, 4, 3);

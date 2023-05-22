@@ -1,4 +1,5 @@
 import hashlib
+import datetime
 from database.postgres_utils import exec_sql_file
 
 
@@ -33,9 +34,19 @@ def seed_database():
 
 
 def hash_password(password):
+    """
+    hashes a password
+    
+    :param password: a string
+    :returns: hashed string
+    """
     tokens = bytes(password.encode())
     return hashlib.sha256(tokens).hexdigest()
 
 
-def get_current_datetime():
+def current_timestamp():
+    """
+    gets the current date and time
+
+    :returns: a string"""
     return datetime.datetime.now().strftime("%x %X")
