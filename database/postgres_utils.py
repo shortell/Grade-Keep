@@ -38,7 +38,6 @@ def exec_get_all(sql, args={}):
     conn = connect()
     cur = conn.cursor()
     cur.execute(sql, args)
-    # https://www.psycopg.org/docs/cursor.html#cursor.fetchall
     list_of_tuples = cur.fetchall()
     conn.close()
     return list_of_tuples
