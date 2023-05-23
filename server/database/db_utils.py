@@ -1,6 +1,6 @@
 import hashlib
 import datetime
-from database.postgres_utils import exec_sql_file
+from server.database.postgres_utils import exec_sql_file
 
 
 def create_database():

@@ -1,2 +1,9 @@
 psycopg2==2.8.4
 pyyaml==5.1
+Flask==2.0.2
+Jinja2==3.0.2
+requests==2.26.0
+itsdangerous==2.0.1
+MarkupSafe==2.0.1
+Werkzeug==2.0.2
+click==8.0.3

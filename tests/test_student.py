@@ -1,8 +1,8 @@
 import datetime
 from decimal import Decimal
 import unittest
-from database.db_utils import initialize_database, seed_database
-from database.student import *
+from server.database.db_utils import initialize_database, seed_database
+from server.database.student import *
 
 
 class Test_Student(unittest.TestCase):

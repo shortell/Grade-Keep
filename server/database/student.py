@@ -1,7 +1,7 @@
 import psycopg2
 
-from database.postgres_utils import exec_get_one, exec_get_all, exec_commit
-from database.db_utils import hash_password, current_timestamp
+from server.database.postgres_utils import exec_get_one, exec_get_all, exec_commit
+from server.database.db_utils import hash_password, current_timestamp
 
 # student table function
 

@@ -1,9 +1,9 @@
 from decimal import Decimal
 import unittest
 import datetime
-from database.db_utils import initialize_database, seed_database
-from database.postgres_utils import exec_get_all
-from database.teacher import *
+from server.database.db_utils import initialize_database, seed_database
+from server.database.postgres_utils import exec_get_all
+from server.database.teacher import *
 
 
 class Test_Teacher(unittest.TestCase):

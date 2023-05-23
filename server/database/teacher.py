@@ -1,5 +1,5 @@
-from database.postgres_utils import connect, exec_commit, exec_get_one, exec_get_all
-from database.db_utils import hash_password, current_timestamp
+from server.database.postgres_utils import connect, exec_commit, exec_get_one, exec_get_all
+from server.database.db_utils import hash_password, current_timestamp
 import psycopg2
 
 # all the functions teacher users will be calling
