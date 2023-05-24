@@ -49,10 +49,7 @@ jobs:
       # Runs a single command using the runners shell
       - name: Install dependencies
         run: |
-          python3 -m venv .venv
-          source .venv/bin/activate
           pip install -r requirements.txt
-          pip install psycopg2
           cp server/config/github_credentials.yml server/config/db.yml
 
       # Runs a set of commands using the runners shell
