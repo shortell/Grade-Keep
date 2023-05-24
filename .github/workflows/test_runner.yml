@@ -44,6 +44,8 @@ jobs:
       # Runs a single command using the runners shell
       - name: Install dependencies
         run: |
+          python3 -m venv .venv
+          .venv/bin/activate
           pip install -r requirements.txt
           cp config/github_credentials.yml config/db.yml
 
