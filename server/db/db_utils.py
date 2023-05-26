@@ -1,20 +1,20 @@
 import hashlib
 import datetime
-from server.database.postgres_utils import exec_sql_file
+from server.db import postgres_utils
 
 
 def create_database():
     """
     executes the queries in sql/create_schema.sql to create all the tables in the database
     """
-    exec_sql_file("sql/create_schema.sql")
+    postgres_utils.exec_sql_file("sql/create_schema.sql")
 
 
 def delete_database():
     """
     executes the queries in sql/drop_schema.sql to drop all the tables in the database
     """
-    exec_sql_file("sql/drop_schema.sql")
+    postgres_utils.exec_sql_file("sql/drop_schema.sql")
 
 
 def initialize_database():
@@ -30,7 +30,7 @@ def seed_database():
     """
     seeds the database for testing purposes
     """
-    exec_sql_file("sql/seed_database.sql")
+    postgres_utils.exec_sql_file("sql/seed_database.sql")
 
 
 def hash_password(password):

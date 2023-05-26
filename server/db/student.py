@@ -1,7 +1,7 @@
 import psycopg2
 
-from server.database.postgres_utils import exec_get_one, exec_get_all, exec_commit
-from server.database.db_utils import hash_password, current_timestamp
+from server.db import postgres_utils
+from server.db import db_utils
 
 # student table function
 
@@ -23,8 +23,8 @@ def create_student(first_name, last_name, username, password):
     VALUES (%s, %s, %s, %s);
     """
     try:
-        exec_commit(query, (first_name, last_name,
-                    username, hash_password(password)))
+        postgres_utils.exec_commit(query, (first_name, last_name,
+                                           username, db_utils.hash_password(password)))
         return True
     except psycopg2.errors.UniqueViolation:
         return False
@@ -43,7 +43,7 @@ def get_student(student_id):
     FROM students
     WHERE id = %s;
     """
-    return exec_get_one(query, (student_id,))
+    return postgres_utils.exec_get_one(query, (student_id,))
 
 
 def login(username, password):
@@ -56,11 +56,11 @@ def login(username, password):
     :returns: a tuple
     """
     query = """
-    SELECT first_name, last_name, username
+    SELECT id
     FROM students
     WHERE username = %s AND password = %s;
     """
-    return exec_get_one(query, (username, hash_password(password))) is not None
+    return postgres_utils.exec_get_one(query, (username, db_utils.hash_password(password)))
 
 
 def update_student(student_id, first_name, last_name, username, password):
@@ -78,8 +78,8 @@ def update_student(student_id, first_name, last_name, username, password):
     WHERE id = %s;
     """
     try:
-        exec_commit(query, (first_name, last_name, username,
-                    hash_password(password), student_id))
+        postgres_utils.exec_commit(query, (first_name, last_name, username,
+                                           db_utils.hash_password(password), student_id))
         return True
     except psycopg2.errors.UniqueViolation:
         return False
@@ -97,7 +97,8 @@ def delete_student(student_id, password):
     DELETE FROM students
     WHERE id = %s AND password = %s;
     """
-    exec_commit(query, (student_id, hash_password(password)))
+    postgres_utils.exec_commit(
+        query, (student_id, db_utils.hash_password(password)))
 
 # course table functions
 
@@ -117,7 +118,7 @@ def get_courses(student_id):
     WHERE enrollments.student_id = %s
     ORDER BY courses.title ASC;
     """
-    return exec_get_all(query, (student_id,))
+    return postgres_utils.exec_get_all(query, (student_id,))
 
 
 def get_course(course_id):
@@ -133,7 +134,7 @@ def get_course(course_id):
     FROM courses
     WHERE id = %s;
     """
-    return exec_get_one(query, (course_id,))
+    return postgres_utils.exec_get_one(query, (course_id,))
 
 
 # submission table functions
@@ -152,8 +153,9 @@ def create_submission(response, assignment_id, student_id):
     INSERT INTO submissions (response, turned_in, assignment_id, student_id)
     VALUES (%s, %s, %s, %s)
     """
-    now = current_timestamp()
-    exec_commit(query, (response, now, assignment_id, student_id))
+    now = db_utils.current_timestamp()
+    postgres_utils.exec_commit(
+        query, (response, now, assignment_id, student_id))
 
 
 def get_submission(student_id, assignment_id):
@@ -170,7 +172,7 @@ def get_submission(student_id, assignment_id):
     FROM submissions
     WHERE student_id = %s AND assignment_id = %s;
     """
-    return exec_get_one(query, (student_id, assignment_id))
+    return postgres_utils.exec_get_one(query, (student_id, assignment_id))
 
 
 def update_submission(submission_id, response):
@@ -186,7 +188,7 @@ def update_submission(submission_id, response):
     SET response = %s
     WHERE id = %s;
     """
-    exec_commit(query, (response, submission_id))
+    postgres_utils.exec_commit(query, (response, submission_id))
 
 
 def delete_submission(submission_id):
@@ -199,7 +201,7 @@ def delete_submission(submission_id):
     DELETE FROM submissions
     WHERE id = %s;
     """
-    exec_commit(query, (submission_id,))
+    postgres_utils.exec_commit(query, (submission_id,))
 
 
 # grades and scores table functions
@@ -220,7 +222,7 @@ def get_score_average_by_course(student_id, course_id):
     INNER JOIN grades ON scores.grade_id = grades.id
     WHERE grades.course_id = %s AND scores.student_id = %s;
     """
-    return exec_get_one(query, (course_id, student_id))
+    return postgres_utils.exec_get_one(query, (course_id, student_id))
 
 
 def get_grades(student_id, course_id):
@@ -238,7 +240,7 @@ def get_grades(student_id, course_id):
     WHERE grades.course_id = %s AND scores.student_id = %s
     ORDER BY posted DESC;
     """
-    return exec_get_all(query, (course_id, student_id))
+    return postgres_utils.exec_get_all(query, (course_id, student_id))
 
 
 def get_score(student_id, grade_id):
@@ -256,4 +258,4 @@ def get_score(student_id, grade_id):
     INNER JOIN grades ON scores.grade_id = grades.id
     WHERE scores.student_id = %s AND scores.grade_id = %s;
     """
-    return exec_get_one(query, (student_id, grade_id))
+    return postgres_utils.exec_get_one(query, (student_id, grade_id))
