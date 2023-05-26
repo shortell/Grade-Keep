@@ -1,8 +1,8 @@
 from flask_cors import CORS
 from flask_restful import Api
 from flask import Flask
-from routes.auth_api import *
-from routes.teacher_api import *
+from routes.auth_api import Login, Register
+from routes.teacher_api import Teacher
 from db import db_utils
 
 
