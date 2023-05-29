@@ -9,15 +9,17 @@ import psycopg2
 
 def create_teacher(first_name, last_name, username, password):
     """
-    TESTED
-    attempts to add record to teacher table if username is unique
-    teachers are created with a unique id generated, first and last name set to empty strings
+    Creates a new teacher entry in the database.
 
-    :param first_name: a string
-    :param last_name: a string
-    :param username: a string
-    :param password: a string that gets hashed
-    :returns: True if teacher is created and False otherwise
+    Args:
+        first_name (str): The first name of the teacher.
+        last_name (str): The last name of the teacher.
+        username (str): The username of the teacher.
+        password (str): The password of the teacher.
+
+    Returns:
+        bool: True if the teacher was successfully created, False if a unique constraint 
+        violation occurred.
     """
     query = """
     INSERT INTO teachers (first_name, last_name, username, password)
@@ -33,11 +35,14 @@ def create_teacher(first_name, last_name, username, password):
 
 def get_teacher(teacher_id):
     """
-    TESTED
-    gets a teacher given their id
+    Retrieves teacher information based on the provided teacher ID.
 
-    :param teacher_id: an int
-    :returns: a tuple
+    Args:
+        teacher_id (int): The unique identifier of the teacher.
+
+    Returns:
+        tuple or None: A tuple containing the teacher's information, including their 
+        ID, first name, last name, and username. Returns None if no teacher is found with the provided ID.
     """
     query = """
     SELECT id, first_name, last_name, username
@@ -49,12 +54,15 @@ def get_teacher(teacher_id):
 
 def login(username, password):
     """
-    TESTED
-    gets a teacher that matches the given username and hashed password
+    Authenticates a teacher by verifying their username and password.
 
-    :param username: a string
-    :param password: a string that gets hashed
-    :returns: a tuple
+    Args:
+        username (str): The username of the teacher.
+        password (str): The password of the teacher.
+
+    Returns:
+        tuple or None: The ID of the authenticated teacher within a tuple if the login 
+        credentials are correct. Returns None if the provided username and password combination is invalid.
     """
     query = """
     SELECT id
@@ -66,12 +74,18 @@ def login(username, password):
 
 def update_teacher(teacher_id, first_name, last_name, username, password):
     """
-    TESTED
-    updates the teachers first and last name
+    Updates the information of a teacher in the database.
 
-    :param teacher_id: an int
-    :param first_name: a string
-    :param last_name: a string
+    Args:
+        teacher_id (int): The ID of the teacher to be updated.
+        first_name (str): The updated first name of the teacher.
+        last_name (str): The updated last name of the teacher.
+        username (str): The updated username of the teacher.
+        password (str): The updated password of the teacher.
+
+    Returns:
+        bool: True if the teacher information was successfully updated, 
+        False if a unique constraint violation occurred.
     """
     query = """
     UPDATE teachers
@@ -88,11 +102,14 @@ def update_teacher(teacher_id, first_name, last_name, username, password):
 
 def delete_teacher(teacher_id, password):
     """
-    TESTED
-    deletes a teacher from the table
+    Deletes a teacher from the database.
 
-    :param teacher_id: an int
-    :param password: a string that gets hashed
+    Args:
+        teacher_id (int): The ID of the teacher to be deleted.
+        password (str): The password of the teacher for authentication.
+
+    Returns:
+        None
     """
     query = """
     DELETE FROM teachers
@@ -116,9 +133,6 @@ def get_students(course_id):
 
     Returns:
         list of tuples: A list of tuples containing the student ID, last name, and first name of each student.
-
-    Raises:
-        Any exceptions raised by the underlying `exec_get_all` function.
     """
     query = """
     SELECT enrollments.id, students.last_name, students.first_name
@@ -132,11 +146,13 @@ def get_students(course_id):
 
 def get_student(enrollment_id):
     """
-    TESTED
-    select a students from a given course
+     Retrieves information about a student based on their enrollment ID.
 
-    :param enrollment_id: an int
-    :returns: a tuple
+    Args:
+        enrollment_id (int): The enrollment ID of the student.
+
+    Returns:
+        tuple: A tuple containing the enrollment ID, last name, and first name of the student.
     """
     query = """
     SELECT enrollments.id, students.last_name, students.first_name
@@ -161,12 +177,6 @@ def create_course(title, description, teacher_id):
 
     Returns:
         None
-
-    Raises:
-        Any exceptions raised by the underlying `exec_commit` function.
-
-    Inserts a new course into the 'courses' table by executing an SQL query.
-    The provided title, description, and teacher ID are used as parameters for the query.
     """
     query = """
     INSERT INTO courses (title, description, teacher_id)
@@ -177,10 +187,13 @@ def create_course(title, description, teacher_id):
 
 def get_courses(teacher_id):
     """
-    TESTED
-    gets courses that a specific teacher is teaching
-    :param teacher_id: an int
-    :return: a list of tuples
+     Retrieves a list of courses taught by a specific teacher.
+
+    Args:
+        teacher_id (int): The ID of the teacher.
+
+    Returns:
+        list: A list of tuples containing the course ID and title of each course taught by the teacher.
     """
     query = """
     SELECT id, title
@@ -194,9 +207,14 @@ def get_courses(teacher_id):
 
 def get_course(course_id):
     """
-    gets a specific course from its id
-    :param course_id: an int
-    :returns: a tuple if found None if not
+    Retrieves information about a specific course based on the provided course ID.
+
+    Args:
+        course_id (int): The ID of the course.
+
+    Returns:
+        tuple or None: A tuple containing the course information, including its ID, 
+        title, and description. Returns None if no course is found with the provided ID.
     """
     query = """
     SELECT id, title, description
@@ -208,13 +226,16 @@ def get_course(course_id):
 
 def update_course(course_id, title, description):
     """
-    TESTED
-    updates the title of the course
+    Updates the title and description of a course.
 
-    :param course_id: an int
-    :param title: a string
-    :param description: a string
-    """
+    Args:
+        course_id (int): The ID of the course to update.
+        title (str): The new title of the course.
+        description (str): The new description of the course.
+
+    Returns:
+        None
+        """
     query = """
     UPDATE courses
     SET title = %s, description = %s
@@ -225,10 +246,13 @@ def update_course(course_id, title, description):
 
 def delete_course(course_id):
     """
-    TESTED
-    deletes a course from the table
+    Deletes a course from the database based on the given course ID.
 
-    :param course_id: an int
+    Args:
+        course_id (int): The ID of the course to delete.
+
+    Returns:
+        None
     """
     query = """
     DELETE FROM courses
@@ -241,13 +265,17 @@ def delete_course(course_id):
 
 def create_assignment(title, instructions, due, course_id):
     """
-    TESTED
-    creates an assignment with a name and instructions attached to a certain record in the courses table
+    Creates a new assignment and inserts it into the database.
 
-    :param title: a string
-    :param instructions: a string
-    :param due: a string
-    :param course_id: an int
+    Args:
+        title (str): The title of the assignment.
+        instructions (str): The instructions for the assignment.
+        due (datetime): The due date and time for the assignment.
+        course_id (int): The ID of the course the assignment belongs to.
+
+    Returns:
+        None
+
     """
     query = """
     INSERT INTO assignments (title, instructions, due, course_id)
@@ -257,6 +285,16 @@ def create_assignment(title, instructions, due, course_id):
 
 
 def __format_assignments(assignments):
+    """
+    helper function
+    Formats the assignment records into a specific format.
+
+    Args:
+        assignments (list): A list of assignment records, where each record is a tuple (title, instructions, due).
+
+    Returns:
+        list: A formatted list of assignment records, where each record is a tuple (title, instructions, formatted_due).
+    """
     formatted = []
     for record in assignments:
         record = (record[0], record[1], record[2].strftime("%x %X"))
@@ -266,11 +304,13 @@ def __format_assignments(assignments):
 
 def get_assignments(course_id):
     """
-    TESTED
-    gets all the assignments from the referenced course
+    Retrieves a list of assignments for a specific course.
 
-    :param course_id: an int
-    :returns: a list of tuples
+    Args:
+        course_id (int): The ID of the course.
+
+    Returns:
+        list: A list of formatted assignment records, where each record is a tuple (id, title, formatted_due).
     """
     query = """
     SELECT id, title, due
@@ -284,11 +324,13 @@ def get_assignments(course_id):
 
 def get_assignment(assignment_id):
     """
-    TESTED
-    get an assignment by its id
+    Retrieves information about a specific assignment.
 
-    :param assignment_id: an int
-    :returns: a tuple
+    Args:
+        assignment_id (int): The ID of the assignment.
+
+    Returns:
+        tuple: A tuple containing the assignment ID, title, instructions, and formatted due date.
     """
     query = """
     SELECT id, title, instructions, due
@@ -301,13 +343,16 @@ def get_assignment(assignment_id):
 
 def update_assignment(assignment_id, title, instructions, due_date):
     """
-    TESTED
-    updates the title and instructions of a given assignment
+    Updates the details of a specific assignment in the database.
 
-    :param assignment_id: an int
-    :param title: a string
-    :param instructions: a string
-    :param due: a string
+    Args:
+        assignment_id (int): The ID of the assignment to update.
+        title (str): The new title of the assignment.
+        instructions (str): The new instructions for the assignment.
+        due_date (datetime): The new due date for the assignment.
+
+    Returns:
+        None
     """
     query = """
     UPDATE assignments
@@ -320,10 +365,13 @@ def update_assignment(assignment_id, title, instructions, due_date):
 
 def delete_assignment(assignment_id):
     """
-    TESTED
-    deletes the assignment attached to the id
+    Deletes a specific assignment from the database.
 
-    :param assignment_id: an int
+    Args:
+        assignment_id (int): The ID of the assignment to delete.
+
+    Returns:
+        None
     """
     query = """
     DELETE FROM assignments
@@ -336,11 +384,14 @@ def delete_assignment(assignment_id):
 
 def get_submissions(assignment_id):
     """
-    TESTED
-    get submissions by an assignment id
+    Retrieves a list of submissions for a specific assignment.
 
-    :param assignment_id: an int
-    :returns: a list of tuples
+    Args:
+        assignment_id (int): The ID of the assignment.
+
+    Returns:
+        list: A list of submission records, where each record contains the submission ID,
+        assignment title, student's last name, student's first name, and submission status.
     """
     query = """
     SELECT submissions.id, assignments.title, students.last_name, students.first_name, submissions.turned_in
@@ -355,11 +406,13 @@ def get_submissions(assignment_id):
 
 def get_submission(submission_id):
     """
-    TESTED
-    get submissions by an assignment id
+    Retrieves information about a specific submission.
 
-    :param assignment_id: an int
-    :returns: a tuple
+    Args:
+        submission_id (int): The ID of the submission.
+
+    Returns:
+        tuple: A tuple containing the submission ID, assignment title, submission response, student's last name, student's first name, and submission status.
     """
     query = """
     SELECT submissions.id, assignments.title, submissions.response, students.last_name, students.first_name, submissions.turned_in
@@ -375,12 +428,17 @@ def get_submission(submission_id):
 
 def __get_grade_id(title, course_id, cur):
     """
-    helper function that gets the id of the grade just created
+    helper function
+    Retrieves the ID of a grade based on the grade title and course ID.
 
-    :param title: a string
-    :param course_id: an int
-    :param cur: cursor object
-    :returns: a tuple
+    Args:
+        title (str): The title of the grade.
+        course_id (int): The ID of the course the grade belongs to.
+        cur (cursor): The database cursor object.
+
+    Returns:
+        tuple or None: A tuple containing the ID of the grade, if found.
+        Returns None if no grade with the specified title and course ID is found.
     """
     query = """
     SELECT id
@@ -393,11 +451,14 @@ def __get_grade_id(title, course_id, cur):
 
 def __get_student_ids(course_id, cur):
     """
-    helper function that gets all the student ids from a given course
+    Retrieves the student IDs enrolled in a specific course.
 
-    :param course_id: an int
-    :param cur: cursor object
-    :returns: a list of tuples
+    Args:
+        course_id (int): The ID of the course.
+        cur (cursor): The database cursor object.
+
+    Returns:
+        list: A list of student IDs enrolled in the course.
     """
     query = """
     SELECT student_id
@@ -410,15 +471,16 @@ def __get_student_ids(course_id, cur):
 
 def create_grade(title, total_points, course_id):
     """
-    TESTED
-    attempts to create a grade for a given course fails if there is 
-    already a grade with the same title in the same course
-    if the grade is successfully created then scores for the entire class are created
+    Creates a new grade for a specific course.
 
-    :param title: a string
-    :param total_points: an int
-    :param course_id: an int
-    :returns: true if grade is created and false otherwise
+    Args:
+        title (str): The title of the grade.
+        total_points (float): The total points available for the grade.
+        course_id (int): The ID of the course the grade belongs to.
+
+    Returns:
+        bool: True if the grade creation is successful,
+        False if a grade with the same title already exists in the course.
     """
     query = """
     INSERT INTO grades (title, total_points, posted, course_id)
@@ -441,6 +503,16 @@ def create_grade(title, total_points, course_id):
 
 
 def __format_grades(grades):
+    """
+    Formats the grades records for display.
+
+    Args:
+        grades (list): A list of grade records.
+
+    Returns:
+        list: A formatted list of grade records, where each record contains the grade ID,
+        title, formatted total points, and formatted posted timestamp.
+    """
     formatted = []
     for record in grades:
         record = (record[0], record[1], format_decimal(
@@ -451,11 +523,14 @@ def __format_grades(grades):
 
 def get_all_grades_avg(course_id):
     """
-    TESTED
-    gets the avg of each grade in a specific course
+    Retrieves the average scores for all grades in a specific course.
 
-    :param course_id: an int
-    :returns: a list of tuples
+    Args:
+        course_id (int): The ID of the course.
+
+    Returns:
+        list: A list of grade records with their average scores,
+        sorted by the posted timestamp in descending order.
     """
     query = """
     SELECT grades.id, grades.title, AVG(scores.points_earned / grades.total_points), grades.posted
@@ -471,12 +546,15 @@ def get_all_grades_avg(course_id):
 
 def update_grade(grade_id, title, total_points):
     """
-    TESTED
-    creates a grade for a given enrollment
+    Updates the details of a grade.
 
-    :param grade_id: an int
-    :param title: a string
-    :param total_points: an int
+    Args:
+        grade_id (int): The ID of the grade to update.
+        title (str): The new title for the grade.
+        total_points (int): The new total points for the grade.
+
+    Returns:
+        None
     """
     query = """
     UPDATE grades
@@ -488,10 +566,13 @@ def update_grade(grade_id, title, total_points):
 
 def delete_grade(grade_id):
     """
-    TESTED
-    deletes a specific grade
+    Deletes a grade from the database.
 
-    :param grade_id: an int
+    Args:
+        grade_id (int): The ID of the grade to delete.
+
+    Returns:
+        None
     """
     query = """
     DELETE FROM grades
@@ -502,13 +583,15 @@ def delete_grade(grade_id):
 
 def __create_score(grade_id, student_id, cur):
     """
-    creates a score given a grade id, student id, and earned points which is null by default
-    cursor is passed in so multiple connections don't have to be opened and closed
+    Creates a score entry for a grade and a student.
 
-    :param grade_id: an int
-    :param student_id: an int
-    :param cur: cursor object
-    :points_earned: an int
+    Args:
+        grade_id (int): The ID of the grade.
+        student_id (int): The ID of the student.
+        cur (cursor): The database cursor to execute the query.
+
+    Returns:
+        None
     """
     query = """
     INSERT INTO scores (grade_id, student_id)
@@ -518,6 +601,15 @@ def __create_score(grade_id, student_id, cur):
 
 
 def __format_scores(scores):
+    """
+    Formats the scores retrieved from the database.
+
+    Args:
+        scores (list): A list of score records retrieved from the database.
+
+    Returns:
+        list: A formatted list of score records.
+    """
     formatted = []
     for record in scores:
         record = (record[0], record[1], format_decimal(
@@ -528,11 +620,13 @@ def __format_scores(scores):
 
 def get_scores(grade_id):
     """
-    TESTED
-    gets all the scores from a specific grade
+    Retrieves scores for a specific grade from the database.
 
-    :param grade_id: an int
-    :returns: a list of tuples
+    Args:
+        grade_id (int): The ID of the grade.
+
+    Returns:
+        list: A formatted list of score records for the grade.
     """
     query = """
     SELECT scores.id, grades.title, (scores.points_earned / grades.total_points), students.last_name, students.first_name
@@ -548,11 +642,13 @@ def get_scores(grade_id):
 
 def get_score(score_id):
     """
-    TESTED
-    gets a specific score
+    Retrieves a specific score from the database.
 
-    :param score_id: an int
-    :returns: a tuple
+    Args:
+        score_id (int): The ID of the score.
+
+    Returns:
+        tuple: A formatted tuple representing the score information.
     """
     query = """
     SELECT grades.title, scores.points_earned, grades.total_points, scores.comment, students.last_name, students.first_name
@@ -569,12 +665,15 @@ def get_score(score_id):
 
 def update_score(score_id, points_earned, comments=''):
     """
-    TESTED
-    updates a specific score
+    Updates the score information in the database for a specific score.
 
-    :param score_id: an int
-    :param points_earned: an int
-    :returns: a tuple
+    Args:
+        score_id (int): The ID of the score.
+        points_earned (float): The points earned for the score.
+        comments (str, optional): Additional comments for the score. Defaults to an empty string.
+
+    Returns:
+        None
     """
     query = """
     UPDATE scores

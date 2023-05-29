@@ -151,7 +151,6 @@ def get_course(course_id):
     Returns:
         tuple or None: A tuple containing the course information, including its ID, 
         title, and description. Returns None if no course is found with the provided ID.
-
     """
     query = """
     SELECT id, title, description
@@ -261,7 +260,8 @@ def get_score_average_by_course(student_id, course_id):
     INNER JOIN grades ON scores.grade_id = grades.id
     WHERE grades.course_id = %s AND scores.student_id = %s;
     """
-    return format_decimal(exec_get_one(query, (course_id, student_id)))
+    score_avg = exec_get_one(query, (course_id, student_id))
+    return format_decimal(score_avg[0]) if score_avg is not None else score_avg
 
 
 def get_grades(student_id, course_id):

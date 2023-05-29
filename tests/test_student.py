@@ -111,7 +111,7 @@ class Test_Student(unittest.TestCase):
         self.assertEqual(pre_deletion_count, (post_deletion_count + 1))
 
     def test_get_score_average_by_course(self):
-        expected = (Decimal('0.53750000000000000000'),)
+        expected = 53.75
         actual = student.get_score_average_by_course(1, 1)
         self.assertEqual(actual, expected)
 
