@@ -1,22 +1,24 @@
 import psycopg2
 
 from .postgres_utils import exec_commit, exec_get_all, exec_get_one
-from .db_utils import hash_password, current_timestamp
+from .db_utils import hash_password, current_timestamp, format_decimal
 
 # student table function
 
 
 def create_student(first_name, last_name, username, password):
     """
-    TESTED
-    attempts to add record to student table if username is unique
-    student are created with a unique id generated, first and last name set to empty strings
+    Creates a new student entry in the database.
 
-    :param first_name: a string
-    :param last_name: a string
-    :param username: a string
-    :param password: a string that gets hashed
-    :returns: True if teacher is created and False otherwise
+    Args:
+        first_name (str): The first name of the student.
+        last_name (str): The last name of the student.
+        username (str): The username of the student.
+        password (str): The password of the student.
+
+    Returns:
+        bool: True if the student was successfully created, False if a unique constraint 
+        violation occurred.
     """
     query = """
     INSERT INTO students (first_name, last_name, username, password)
@@ -32,11 +34,14 @@ def create_student(first_name, last_name, username, password):
 
 def get_student(student_id):
     """
-    TESTED
-    gets a student given their id
+    Retrieves student information based on the provided student ID.
 
-    :param student_id: an int
-    :returns: a tuple
+    Args:
+        student_id (int): The unique identifier of the student.
+
+    Returns:
+        tuple or None: A tuple containing the student's information, including their 
+        ID, first name, last name, and username. Returns None if no student is found with the provided ID.
     """
     query = """
     SELECT id, first_name, last_name, username
@@ -48,12 +53,15 @@ def get_student(student_id):
 
 def login(username, password):
     """
-    TESTED
-    gets a student that matches the given username and hashed password
+    Authenticates a student by verifying their username and password.
 
-    :param username: a string
-    :param password: a string that gets hashed
-    :returns: a tuple
+    Args:
+        username (str): The username of the student.
+        password (str): The password of the student.
+
+    Returns:
+        tuple or None: The ID of the authenticated student within a tuple if the login 
+        credentials are correct. Returns None if the provided username and password combination is invalid.
     """
     query = """
     SELECT id
@@ -65,12 +73,18 @@ def login(username, password):
 
 def update_student(student_id, first_name, last_name, username, password):
     """
-    TESTED
-    updates the students first and last name
+    Updates the information of a student in the database.
 
-    :param student_id: an int
-    :param first_name: a string
-    :param last_name: a string
+    Args:
+        student_id (int): The ID of the student to be updated.
+        first_name (str): The updated first name of the student.
+        last_name (str): The updated last name of the student.
+        username (str): The updated username of the student.
+        password (str): The updated password of the student.
+
+    Returns:
+        bool: True if the student information was successfully updated, 
+        False if a unique constraint violation occurred.
     """
     query = """
     UPDATE students
@@ -87,11 +101,14 @@ def update_student(student_id, first_name, last_name, username, password):
 
 def delete_student(student_id, password):
     """
-    TESTED
-    deletes a student from the table
+    Deletes a student from the database.
 
-    :param student_id: an int
-    :param password: a string that gets hashed
+    Args:
+        student_id (int): The ID of the student to be deleted.
+        password (str): The password of the student for authentication.
+
+    Returns:
+        None
     """
     query = """
     DELETE FROM students
@@ -105,11 +122,14 @@ def delete_student(student_id, password):
 
 def get_courses(student_id):
     """
-    TESTED
-    gets the courses a student is enrolled in
+    Retrieves the list of courses enrolled by a student.
 
-    :param student_id: an int
-    :returns: a list of tuples
+    Args:
+        student_id (int): The ID of the student.
+
+    Returns:
+        list: A list of tuples, where each tuple represents a course with its 
+        ID and title. If the student is not enrolled in any courses, an empty list is returned.
     """
     query = """
     SELECT courses.id, courses.title
@@ -123,11 +143,15 @@ def get_courses(student_id):
 
 def get_course(course_id):
     """
-    TESTED
-    gets a specific course and its info
+    Retrieves information about a specific course based on the provided course ID.
 
-    :param course_id: an int
-    :returns: a tuple
+    Args:
+        course_id (int): The ID of the course.
+
+    Returns:
+        tuple or None: A tuple containing the course information, including its ID, 
+        title, and description. Returns None if no course is found with the provided ID.
+
     """
     query = """
     SELECT id, title, description
@@ -141,13 +165,15 @@ def get_course(course_id):
 
 def create_submission(response, assignment_id, student_id):
     """
-    TESTED
-    creates a submission with the given response, assignment id, and student id
-    sets the turned in timestamp as the current date and time
+    Creates a new submission for an assignment.
 
-    :param response: a string
-    :param assignment_id: an int
-    :param student_id: an int
+    Args:
+        response (str): The response or content of the submission.
+        assignment_id (int): The ID of the assignment for which the submission is created.
+        student_id (int): The ID of the student who is making the submission.
+
+    Returns:
+        None
     """
     query = """
     INSERT INTO submissions (response, turned_in, assignment_id, student_id)
@@ -160,12 +186,15 @@ def create_submission(response, assignment_id, student_id):
 
 def get_submission(student_id, assignment_id):
     """
-    TESTED
-    gets a submission by its student and assignment id
+    Retrieves the submission details of a student for a specific assignment.
 
-    :param student_id: an int
-    :param assignment_id: an int
-    :returns: a tuple
+    Args:
+        student_id (int): The ID of the student.
+        assignment_id (int): The ID of the assignment.
+
+    Returns:
+        tuple or None: A tuple containing the submission details, including the response content
+        and the timestamp when it was turned in. Returns None if no submission is found for the provided student and assignment.
     """
     query = """
     SELECT response, turned_in
@@ -177,11 +206,14 @@ def get_submission(student_id, assignment_id):
 
 def update_submission(submission_id, response):
     """
-    TESTED
-    updates the response of a submission
+    Updates the response content of a submission.
 
-    :param submission_id: an int
-    :param response: a string
+    Args:
+        submission_id (int): The ID of the submission to be updated.
+        response (str): The updated response content.
+
+    Returns:
+        None
     """
     query = """
     UPDATE submissions
@@ -193,9 +225,13 @@ def update_submission(submission_id, response):
 
 def delete_submission(submission_id):
     """
-    TESTED
-    deletes a submission given a submission id
-    :param submission_id: an int
+    Deletes a submission from the database.
+
+    Args:
+        submission_id (int): The ID of the submission to be deleted.
+
+    Returns:
+        None
     """
     query = """
     DELETE FROM submissions
@@ -209,12 +245,15 @@ def delete_submission(submission_id):
 
 def get_score_average_by_course(student_id, course_id):
     """
-    TESTED
-    gets the average of all the scores from a student in a given course
+    Calculates and formats the average score percentage achieved by a student in a specific course.
 
-    :param student_id: an int
-    :param course_id: an int
-    :returns: a tuple
+    Args:
+        student_id (int): The ID of the student.
+        course_id (int): The ID of the course.
+
+    Returns:
+        float or None: The average score percentage as a float representation (e.g., "75.00%" for 75%).
+        Returns None if no scores are found for the provided student and course.
     """
     query = """
     SELECT AVG(points_earned / grades.total_points)
@@ -222,16 +261,21 @@ def get_score_average_by_course(student_id, course_id):
     INNER JOIN grades ON scores.grade_id = grades.id
     WHERE grades.course_id = %s AND scores.student_id = %s;
     """
-    return exec_get_one(query, (course_id, student_id))
+    return format_decimal(exec_get_one(query, (course_id, student_id)))
 
 
 def get_grades(student_id, course_id):
     """
-    TESTED
-    gets all the grades from a given course
+    Retrieves the grades and related information for a specific student in a given course.
 
-    :param course_id: an int
-    :returns: a list of tuples
+    Args:
+        student_id (int): The ID of the student.
+        course_id (int): The ID of the course.
+
+    Returns:
+        list of tuples or None: A list of tuples representing each grade and its details,
+        including the grade ID, title, percentage score achieved, and the timestamp when it 
+        was posted. Returns None if no grades are found for the provided student and course.
     """
     query = """
     SELECT grades.id, grades.title, (scores.points_earned / grades.total_points), posted
@@ -245,12 +289,16 @@ def get_grades(student_id, course_id):
 
 def get_score(student_id, grade_id):
     """
-    TESTED
-    gets the score of specific grade for a specific student
+    Retrieves the details of a specific score for a given student and grade.
 
-    :param student_id: an int
-    :param grade_id: an int
-    :returns: a tuple
+    Args:
+        student_id (int): The ID of the student.
+        grade_id (int): The ID of the grade.
+
+    Returns:
+        tuple or None: A tuple representing the score details, including the score ID,
+        grade title, points earned, total points possible, and any associated comment.
+        Returns None if no score is found for the provided student and grade.
     """
     query = """
     SELECT scores.id, grades.title, scores.points_earned, grades.total_points, scores.comment
