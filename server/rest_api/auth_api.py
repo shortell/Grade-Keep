@@ -22,6 +22,10 @@ class Login(Resource):
                 return 200
             
         return 400
+    
+class Logout(Resource):
+    def get(self):
+        session.clear()
 
 
 class Register(Resource):

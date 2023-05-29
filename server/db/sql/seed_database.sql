@@ -79,7 +79,7 @@ VALUES (50, 1, 1);
 INSERT INTO scores (points_earned, grade_id, student_id) -- id: 2
 VALUES (70, 1, 2);
 INSERT INTO scores (points_earned, grade_id, student_id) -- id: 3
-VALUES (20, 1, 3);
+VALUES (NULL, 1, 3);
 
 INSERT INTO scores (points_earned, grade_id, student_id) -- id: 4
 VALUES (0, 2, 1);

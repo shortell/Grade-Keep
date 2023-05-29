@@ -71,7 +71,7 @@ class Test_Teacher(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_create_course(self):
-        teacher.create_course("Statistics", 3)
+        teacher.create_course("Statistics", '', 3)
         query = """
         SELECT * FROM courses
         WHERE id = 6;
@@ -85,15 +85,20 @@ class Test_Teacher(unittest.TestCase):
         expected = [(4, 'AP US History'), (5, 'Global Studies')]
         self.assertEqual(actual, expected)
 
+    def test_get_course(self):
+        expected = (1, 'Algebra I section 01', 'Default course description')
+        actual = teacher.get_course(1)
+        self.assertEqual(actual, expected)
+
     def test_update_courses(self):
-        teacher.update_course(1, 'AP Calculus AB')
+        teacher.update_course(1, 'AP Calculus AB', '')
         query = """
         SELECT * FROM
         courses
         WHERE id = 1;
         """
         actual = postgres_utils.exec_get_one(query)
-        expected = (1, 'AP Calculus AB', 'Default course description', 1)
+        expected = (1, 'AP Calculus AB', '', 1)
         self.assertEqual(actual, expected)
 
     def test_delete_course(self):
@@ -120,15 +125,15 @@ class Test_Teacher(unittest.TestCase):
     def test_get_assignments(self):
         actual = teacher.get_assignments(5)
         expected = [
-            (1, 'Essay #1', datetime.datetime(2004, 10, 19, 10, 23, 54)),
-            (4, 'HW#5', datetime.datetime(2004, 10, 19, 10, 23, 54))
+            (1, 'Essay #1', '10/19/04 10:23:54'),
+            (4, 'HW#5', '10/19/04 10:23:54')
         ]
         self.assertEqual(actual, expected)
 
     def test_get_assignment(self):
         actual = teacher.get_assignment(2)
         expected = (2, 'HW#1', 'Graph the following equations f(x)=x^2...',
-                    datetime.datetime(2004, 10, 19, 10, 23, 54))
+                    '10/19/04 10:23:54')
         self.assertEqual(actual, expected)
 
     def test_update_assignment(self):
@@ -202,20 +207,20 @@ class Test_Teacher(unittest.TestCase):
         expected = [
             (4,
              'HW#4',
-             Decimal('0.96666666666666666667'),
-             datetime.datetime(2004, 10, 25, 10, 23, 54)),
+             96.67,
+             '10/25/04 10:23:54'),
             (3,
              'HW#3',
-             Decimal('0.80333333333333333333'),
-             datetime.datetime(2004, 10, 23, 10, 23, 54)),
+             80.33,
+             '10/23/04 10:23:54'),
             (2,
              'HW#2',
-             Decimal('0.58333333333333333333'),
-             datetime.datetime(2004, 10, 21, 10, 23, 54)),
+             58.33,
+             '10/21/04 10:23:54'),
             (1,
              'HW#1',
-             Decimal('0.46666666666666666667'),
-             datetime.datetime(2004, 10, 19, 10, 23, 54))
+             60,
+             '10/19/04 10:23:54')
         ]
         actual = teacher.get_all_grades_avg(1)
         self.assertEqual(actual, expected)
@@ -248,9 +253,9 @@ class Test_Teacher(unittest.TestCase):
 
     def test_get_scores(self):
         expected = [
-            (1, 'HW#1', Decimal('0.50000000000000000000'), 'Lawson', 'Xanthe'),
-            (2, 'HW#1', Decimal('0.70000000000000000000'), 'Norman', 'Valentina'),
-            (3, 'HW#1', Decimal('0.20000000000000000000'), 'Stanton', 'Amie')
+            (1, 'HW#1', 50, 'Lawson', 'Xanthe'),
+            (2, 'HW#1', 70, 'Norman', 'Valentina'),
+            (3, 'HW#1', None, 'Stanton', 'Amie')
         ]
         actual = teacher.get_scores(1)
         self.assertEqual(actual, expected)

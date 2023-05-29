@@ -1,5 +1,5 @@
 from .postgres_utils import exec_commit, exec_get_all, exec_get_one, connect
-from .db_utils import hash_password, current_timestamp
+from .db_utils import hash_password, current_timestamp, format_decimal
 import psycopg2
 
 # all the functions teacher users will be calling
@@ -104,14 +104,21 @@ def delete_teacher(teacher_id, password):
 # student table function
 
 
-def get_students(class_id):
+def get_students(course_id):
     """
-    TESTED
-    for teachers to use
-    select all students from a given class
+    Retrieves a list of students enrolled in a given course.
 
-    :param class_id: an int
-    :returns: a list of tuples
+    This function is intended for teachers to use. It executes an SQL query to select all students
+    from the specified course. The students are sorted by their last names in ascending order.
+
+    Args:
+        course_id (int): The ID of the course.
+
+    Returns:
+        list of tuples: A list of tuples containing the student ID, last name, and first name of each student.
+
+    Raises:
+        Any exceptions raised by the underlying `exec_get_all` function.
     """
     query = """
     SELECT enrollments.id, students.last_name, students.first_name
@@ -120,7 +127,7 @@ def get_students(class_id):
     WHERE enrollments.course_id = %s
     ORDER BY students.last_name ASC;
     """
-    return exec_get_all(query, (class_id,))
+    return exec_get_all(query, (course_id,))
 
 
 def get_student(enrollment_id):
@@ -143,19 +150,29 @@ def get_student(enrollment_id):
 
 # course table functions
 
-def create_course(title, teacher_id):
+def create_course(title, description, teacher_id):
     """
-    TESTED
-    creates a course for a teacher with a given title
+    Creates a new course in the database.
 
-    :param title: a string
-    :param teacher_id: an int
+    Args:
+        title (str): The title of the course.
+        description (str): A description of the course.
+        teacher_id (int): The ID of the teacher assigned to the course.
+
+    Returns:
+        None
+
+    Raises:
+        Any exceptions raised by the underlying `exec_commit` function.
+
+    Inserts a new course into the 'courses' table by executing an SQL query.
+    The provided title, description, and teacher ID are used as parameters for the query.
     """
     query = """
-    INSERT INTO courses (title, teacher_id)
-    VALUES (%s, %s);
+    INSERT INTO courses (title, description, teacher_id)
+    VALUES (%s, %s, %s);
     """
-    exec_commit(query, (title, teacher_id))
+    exec_commit(query, (title, description, teacher_id))
 
 
 def get_courses(teacher_id):
@@ -175,20 +192,35 @@ def get_courses(teacher_id):
     return results
 
 
-def update_course(course_id, title):
+def get_course(course_id):
+    """
+    gets a specific course from its id
+    :param course_id: an int
+    :returns: a tuple if found None if not
+    """
+    query = """
+    SELECT id, title, description
+    FROM courses
+    WHERE id = %s;
+    """
+    return exec_get_one(query, (course_id,))
+
+
+def update_course(course_id, title, description):
     """
     TESTED
     updates the title of the course
 
     :param course_id: an int
     :param title: a string
+    :param description: a string
     """
     query = """
     UPDATE courses
-    SET title = %s
+    SET title = %s, description = %s
     WHERE id = %s;
     """
-    exec_commit(query, (title, course_id))
+    exec_commit(query, (title, description, course_id))
 
 
 def delete_course(course_id):
@@ -224,6 +256,14 @@ def create_assignment(title, instructions, due, course_id):
     exec_commit(query, (title, instructions, due, course_id))
 
 
+def __format_assignments(assignments):
+    formatted = []
+    for record in assignments:
+        record = (record[0], record[1], record[2].strftime("%x %X"))
+        formatted.append(record)
+    return formatted
+
+
 def get_assignments(course_id):
     """
     TESTED
@@ -238,7 +278,8 @@ def get_assignments(course_id):
     WHERE course_id = %s
     ORDER BY due DESC;
     """
-    return exec_get_all(query, (course_id,))
+    assignments = exec_get_all(query, (course_id,))
+    return __format_assignments(assignments)
 
 
 def get_assignment(assignment_id):
@@ -254,7 +295,8 @@ def get_assignment(assignment_id):
     FROM assignments
     WHERE id = %s;
     """
-    return exec_get_one(query, (assignment_id,))
+    assignment = exec_get_one(query, (assignment_id,))
+    return (assignment[0], assignment[1], assignment[2], assignment[3].strftime("%x %X"))
 
 
 def update_assignment(assignment_id, title, instructions, due_date):
@@ -398,6 +440,15 @@ def create_grade(title, total_points, course_id):
         return False
 
 
+def __format_grades(grades):
+    formatted = []
+    for record in grades:
+        record = (record[0], record[1], format_decimal(
+            record[2]), record[3].strftime("%x %X"))
+        formatted.append(record)
+    return formatted
+
+
 def get_all_grades_avg(course_id):
     """
     TESTED
@@ -414,7 +465,8 @@ def get_all_grades_avg(course_id):
     GROUP BY grades.id
     ORDER BY grades.posted DESC;
     """
-    return exec_get_all(query, (course_id,))
+    grades = exec_get_all(query, (course_id,))
+    return __format_grades(grades)
 
 
 def update_grade(grade_id, title, total_points):
@@ -465,6 +517,15 @@ def __create_score(grade_id, student_id, cur):
     cur.execute(query, (grade_id, student_id))
 
 
+def __format_scores(scores):
+    formatted = []
+    for record in scores:
+        record = (record[0], record[1], format_decimal(
+            record[2]), record[3], record[4])
+        formatted.append(record)
+    return formatted
+
+
 def get_scores(grade_id):
     """
     TESTED
@@ -481,7 +542,8 @@ def get_scores(grade_id):
     WHERE scores.grade_id = %s
     ORDER BY students.last_name ASC;
     """
-    return exec_get_all(query, (grade_id,))
+    scores = exec_get_all(query, (grade_id,))
+    return __format_scores(scores)
 
 
 def get_score(score_id):
@@ -499,7 +561,10 @@ def get_score(score_id):
     INNER JOIN students ON scores.student_id = students.id)
     WHERE scores.id = %s;
     """
-    return exec_get_one(query, (score_id,))
+    score = exec_get_one(query, (score_id,))
+    formatted_score = (score[0], format_decimal(
+        score[1], 1), format_decimal(score[2], 1), score[3], score[4], score[5])
+    return formatted_score
 
 
 def update_score(score_id, points_earned, comments=''):

@@ -50,3 +50,8 @@ def current_timestamp():
 
     :returns: a string"""
     return datetime.datetime.now().strftime("%x %X")
+
+def format_decimal(input, multiplier=100):
+    if input is not None:
+        return round(float(input) * multiplier, 2) 
+    return None
