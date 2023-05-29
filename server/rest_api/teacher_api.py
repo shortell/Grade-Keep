@@ -4,19 +4,6 @@ from db import teacher
 from rest_api import rest_utils
 
 
-import sys
-
-
-
-
-def is_logged_in():
-    return session.get("id") is not None
-
-
-def is_teacher():
-    return session.get("account_type") == "teacher"
-
-
 def is_course_authorized(course_id):
     if course_id in session["course_ids"]:
         return True
@@ -55,12 +42,12 @@ def is_score_authorized(course_id, grade_id, score_id):
 
 class Teachers(Resource):
     def get(self):
-        if rest_utils.is_session_valid(session["account_type"]):
+        if rest_utils.is_session_valid("teacher"):
             id = session["id"]
             return teacher.get_teacher(id)
 
     def put(self):
-        if rest_utils.is_session_valid(session["account_type"]):
+        if rest_utils.is_session_valid("teacher"):
             id = session["id"]
             username = request.form['username']
             password = request.form['password']
@@ -69,7 +56,7 @@ class Teachers(Resource):
             return teacher.update_teacher(id, first_name, last_name, username, password)
 
     def delete(self):
-        if rest_utils.is_session_valid(session["account_type"]):
+        if rest_utils.is_session_valid("teacher"):
             id = session["id"]
             password = request.form['password']
             teacher.delete_teacher(id, password)
@@ -78,7 +65,7 @@ class Teachers(Resource):
 
 class Courses(Resource):
     def post(self):
-        if rest_utils.is_session_valid(session["account_type"]):
+        if rest_utils.is_session_valid("teacher"):
             title = request.form['title']
             description = request.form['description']
             id = session["id"]
@@ -86,7 +73,7 @@ class Courses(Resource):
             return 201
 
     def get(self):
-        if rest_utils.is_session_valid(session["account_type"]):
+        if rest_utils.is_session_valid("teacher"):
             session_id = session["id"]
             courses = teacher.get_courses(session_id)
             course_ids = [record[0]
@@ -97,25 +84,25 @@ class Courses(Resource):
 
 class Course(Resource):
     def get(self, course_id):
-        if rest_utils.is_session_valid(session["account_type"]) and is_course_authorized(course_id):
+        if rest_utils.is_session_valid("teacher") and is_course_authorized(course_id):
             return list(teacher.get_course(course_id))
 
     def put(self, course_id):
-        if rest_utils.is_session_valid(session["account_type"]) and is_course_authorized(course_id):
+        if rest_utils.is_session_valid("teacher") and is_course_authorized(course_id):
             title = request.form['title']
             description = request.form['description']
             teacher.update_course(course_id, title, description)
             return 200
 
     def delete(self, course_id):
-        if rest_utils.is_session_valid(session["account_type"]) and is_course_authorized(course_id):
+        if rest_utils.is_session_valid("teacher") and is_course_authorized(course_id):
             teacher.delete_course(course_id)
             return 200
 
 
 class Students(Resource):
     def get(self, course_id):
-        if rest_utils.is_session_valid(session["account_type"]) and is_course_authorized(course_id):
+        if rest_utils.is_session_valid("teacher") and is_course_authorized(course_id):
             students = teacher.get_students(course_id)
             enrollment_ids = [record[0]
                               for record in students] if students is not None else []
@@ -125,13 +112,13 @@ class Students(Resource):
 
 class Student(Resource):
     def get(self, course_id, enrollment_id):
-        if rest_utils.is_session_valid(session["account_type"]) and is_enrollment_authorized(course_id, enrollment_id):
+        if rest_utils.is_session_valid("teacher") and is_enrollment_authorized(course_id, enrollment_id):
             return teacher.get_student(enrollment_id)
 
 
 class Assignments(Resource):
     def post(self, course_id):
-        if rest_utils.is_session_valid(session["account_type"]) and is_course_authorized(course_id):
+        if rest_utils.is_session_valid("teacher") and is_course_authorized(course_id):
             title = request.form['title']
             instructions = request.form['instructions']
             due = request.form['due']
@@ -139,7 +126,7 @@ class Assignments(Resource):
             return 201
 
     def get(self, course_id):
-        if rest_utils.is_session_valid(session["account_type"]) and is_course_authorized(course_id):
+        if rest_utils.is_session_valid("teacher") and is_course_authorized(course_id):
             assignments = teacher.get_assignments(course_id)
             assignment_ids = [record[0]
                               for record in assignments] if assignments is not None else []
@@ -149,11 +136,11 @@ class Assignments(Resource):
 
 class Assignment(Resource):
     def get(self, course_id, assignment_id):
-        if rest_utils.is_session_valid(session["account_type"]) and is_assignment_authorized(course_id, assignment_id):
+        if rest_utils.is_session_valid("teacher") and is_assignment_authorized(course_id, assignment_id):
             return teacher.get_assignment(assignment_id)
 
     def put(self, course_id, assignment_id):
-        if rest_utils.is_session_valid(session["account_type"]) and is_assignment_authorized(course_id, assignment_id):
+        if rest_utils.is_session_valid("teacher") and is_assignment_authorized(course_id, assignment_id):
             title = request.form['title']
             instructions = request.form['instructions']
             due = request.form['due']
@@ -161,14 +148,14 @@ class Assignment(Resource):
             return 200
 
     def delete(self, course_id, assignment_id):
-        if rest_utils.is_session_valid(session["account_type"]) and is_assignment_authorized(course_id, assignment_id):
+        if rest_utils.is_session_valid("teacher") and is_assignment_authorized(course_id, assignment_id):
             teacher.delete_assignment(assignment_id)
             return 200
 
 
 class Submissions(Resource):
     def get(self, course_id, assignment_id):
-        if rest_utils.is_session_valid(session["account_type"]) and is_assignment_authorized(course_id, assignment_id):
+        if rest_utils.is_session_valid("teacher") and is_assignment_authorized(course_id, assignment_id):
             submissions = teacher.get_submissions(assignment_id)
             submission_ids = [record[0]
                               for record in submissions] if submissions is not None else []
@@ -178,20 +165,20 @@ class Submissions(Resource):
 
 class Submission(Resource):
     def get(self, course_id, assignment_id, submission_id):
-        if rest_utils.is_session_valid(session["account_type"]) and is_submission_authorized(course_id, assignment_id, submission_id):
+        if rest_utils.is_session_valid("teacher") and is_submission_authorized(course_id, assignment_id, submission_id):
             return teacher.get_submission(submission_id)
 
 
 class Grades(Resource):
     def post(self, course_id):
-        if rest_utils.is_session_valid(session["account_type"]) and is_course_authorized(course_id):
+        if rest_utils.is_session_valid("teacher") and is_course_authorized(course_id):
             title = request.form['title']
             total_points = request.form['total_points']
             teacher.create_grade(title, total_points, course_id)
             return 201
 
     def get(self, course_id):
-        if rest_utils.is_session_valid(session["account_type"]) and is_course_authorized(course_id):
+        if rest_utils.is_session_valid("teacher") and is_course_authorized(course_id):
             grades = teacher.get_all_grades_avg(course_id)
             grade_ids = [record[0]
                          for record in grades] if grades is not None else []
@@ -201,21 +188,21 @@ class Grades(Resource):
 
 class Grade(Resource):
     def put(self, course_id, grade_id):
-        if rest_utils.is_session_valid(session["account_type"]) and is_grade_authorized(course_id, grade_id):
+        if rest_utils.is_session_valid("teacher") and is_grade_authorized(course_id, grade_id):
             title = request.form['title']
             total_points = request.form['total_points']
             teacher.update_grade(grade_id, title, total_points)
             return 200
 
     def delete(self, course_id, grade_id):
-        if rest_utils.is_session_valid(session["account_type"]) and is_grade_authorized(course_id, grade_id):
+        if rest_utils.is_session_valid("teacher") and is_grade_authorized(course_id, grade_id):
             teacher.delete_grade(grade_id)
             return 200
 
 
 class Scores(Resource):
     def get(self, course_id, grade_id):
-        if rest_utils.is_session_valid(session["account_type"]) and is_grade_authorized(course_id, grade_id):
+        if rest_utils.is_session_valid("teacher") and is_grade_authorized(course_id, grade_id):
             scores = teacher.get_scores(grade_id)
             score_ids = [record[0]
                          for record in scores] if scores is not None else []
@@ -225,11 +212,11 @@ class Scores(Resource):
 
 class Score(Resource):
     def get(self, course_id, grade_id, score_id):
-        if rest_utils.is_session_valid(session["account_type"]) and is_score_authorized(course_id, grade_id, score_id):
+        if rest_utils.is_session_valid("teacher") and is_score_authorized(course_id, grade_id, score_id):
             return teacher.get_score(score_id)
 
     def put(self, course_id, grade_id, score_id):
-        if rest_utils.is_session_valid(session["account_type"]) and is_score_authorized(course_id, grade_id, score_id):
+        if rest_utils.is_session_valid("teacher") and is_score_authorized(course_id, grade_id, score_id):
             points_earned = request.form['points_earned']
             comments = request.form['comments']
             teacher.update_score(score_id, points_earned, comments)

@@ -161,18 +161,18 @@ class Test_Teacher(unittest.TestCase):
     def test_get_submissions(self):
         expected = [
             (1, 'Essay #1', 'Lawson', 'Xanthe',
-             datetime.datetime(2004, 10, 19, 10, 23, 54)),
+             '10/19/04 10:23:54'),
             (2, 'Essay #1', 'Norman', 'Valentina',
-             datetime.datetime(2004, 10, 19, 10, 23, 54)),
+             '10/19/04 10:23:54'),
             (3, 'Essay #1', 'Stanton', 'Amie',
-             datetime.datetime(2004, 10, 19, 10, 23, 54))
+             '10/19/04 10:23:54')
         ]
         actual = teacher.get_submissions(1)
         self.assertEqual(actual, expected)
 
     def test_get_submission(self):
         expected = (1, 'Essay #1', 'Lorem ipsum...', 'Lawson',
-                    'Xanthe', datetime.datetime(2004, 10, 19, 10, 23, 54))
+                    'Xanthe', '10/19/04 10:23:54')
         actual = teacher.get_submission(1)
         self.assertEqual(actual, expected)
 

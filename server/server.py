@@ -1,7 +1,7 @@
 from flask_cors import CORS
 from flask_restful import Api
 from flask import Flask
-from rest_api.auth_api import Login, Register
+from rest_api.auth_api import Login, Logout, Register
 from rest_api.teacher_api import (Teachers, Courses, Course, Assignments,
                                   Assignment, Students, Student, Submissions, Submission, Grades, Grade, Scores, Score)
 from db import db_utils
@@ -14,8 +14,9 @@ api = Api(app)  # api router
 course_url = "/teachers/courses/<int:course_id>"
 assignment_url = "/assignments/<int:assignment_id>"
 grade_url = "/grades/<int:grade_id>"
-#TEACHER RESOURCES
+# TEACHER RESOURCES
 api.add_resource(Login, "/login")
+api.add_resource(Logout, "/logout")
 api.add_resource(Register, "/register")
 api.add_resource(Teachers, "/teachers")
 api.add_resource(Courses, "/teachers/courses")

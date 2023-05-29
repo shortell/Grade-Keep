@@ -1,7 +1,7 @@
 import psycopg2
 
 from .postgres_utils import exec_commit, exec_get_all, exec_get_one
-from .db_utils import hash_password, current_timestamp, format_decimal
+from .db_utils import hash_password, timestamp_to_str, format_decimal
 
 # student table function
 
@@ -178,7 +178,7 @@ def create_submission(response, assignment_id, student_id):
     INSERT INTO submissions (response, turned_in, assignment_id, student_id)
     VALUES (%s, %s, %s, %s)
     """
-    now = current_timestamp()
+    now = timestamp_to_str()
     exec_commit(
         query, (response, now, assignment_id, student_id))
 

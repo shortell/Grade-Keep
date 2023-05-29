@@ -6,12 +6,12 @@ import rest_utils
 
 class Students(Resource):
     def get(self):
-        if rest_utils.is_session_valid():
+        if rest_utils.is_session_valid("student"):
             id = session["id"]
-            return teacher.get_teacher(id)
+            return student.get_student(id)
 
     def put(self):
-        if rest_utils.is_session_valid():
+        if rest_utils.is_session_valid("student"):
             id = session["id"]
             username = request.form['username']
             password = request.form['password']
@@ -20,7 +20,7 @@ class Students(Resource):
             return student.update_student(id, first_name, last_name, username, password)
 
     def delete(self):
-        if rest_utils.is_session_valid():
+        if rest_utils.is_session_valid("student"):
             id = session["id"]
             password = request.form['password']
             student.delete_student(id, password)

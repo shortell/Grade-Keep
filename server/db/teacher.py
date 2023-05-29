@@ -1,5 +1,5 @@
 from .postgres_utils import exec_commit, exec_get_all, exec_get_one, connect
-from .db_utils import hash_password, current_timestamp, format_decimal
+from .db_utils import hash_password, timestamp_to_str, format_decimal
 import psycopg2
 
 # all the functions teacher users will be calling
@@ -382,6 +382,25 @@ def delete_assignment(assignment_id):
 # submission table functions
 
 
+def __format_submissions(submissions):
+    """
+    Formats a list of submissions into a specific format.
+
+    Args:
+        submissions (list): A list of submissions, where each submission is a tuple of five elements:
+                            (element1, element2, element3, element4, timestamp).
+
+    Returns:
+        list: A list of formatted submissions, where each formatted submission is a tuple of five elements:
+              (element1, element2, element3, element4, formatted_timestamp).
+    """
+    formatted = []
+    for record in submissions:
+        formatted.append((record[0], record[1], record[2],
+                         record[3], timestamp_to_str(record[4])))
+    return formatted
+
+
 def get_submissions(assignment_id):
     """
     Retrieves a list of submissions for a specific assignment.
@@ -401,7 +420,8 @@ def get_submissions(assignment_id):
     WHERE assignment_id = %s
     ORDER BY students.last_name ASC;
     """
-    return exec_get_all(query, (assignment_id,))
+    submissions = exec_get_all(query, (assignment_id,))
+    return __format_submissions(submissions)
 
 
 def get_submission(submission_id):
@@ -421,7 +441,8 @@ def get_submission(submission_id):
     INNER JOIN students ON submissions.student_id = students.id)
     WHERE submissions.id = %s;
     """
-    return exec_get_one(query, (submission_id,))
+    submission = exec_get_one(query, (submission_id,))
+    return (submission[0], submission[1], submission[2], submission[3], submission[4], timestamp_to_str(submission[5]))
 
 
 # grades and scores table functions
@@ -486,7 +507,7 @@ def create_grade(title, total_points, course_id):
     INSERT INTO grades (title, total_points, posted, course_id)
     VALUES(%s, %s, %s, %s);
     """
-    now = current_timestamp()
+    now = timestamp_to_str()
     conn = connect()
     cur = conn.cursor()
     try:

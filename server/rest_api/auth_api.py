@@ -20,12 +20,14 @@ class Login(Resource):
                 session['account_type'] = account_type
                 session['id'] = result[0]
                 return 200
-            
+
         return 400
-    
+
+
 class Logout(Resource):
     def get(self):
         session.clear()
+        return 200
 
 
 class Register(Resource):

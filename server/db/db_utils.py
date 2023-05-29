@@ -36,7 +36,7 @@ def seed_database():
 def hash_password(password):
     """
     hashes a password
-    
+
     :param password: a string
     :returns: hashed string
     """
@@ -44,14 +44,15 @@ def hash_password(password):
     return hashlib.sha256(tokens).hexdigest()
 
 
-def current_timestamp():
+def timestamp_to_str(timestamp=datetime.datetime.now()):
     """
     gets the current date and time
 
     :returns: a string"""
-    return datetime.datetime.now().strftime("%x %X")
+    return timestamp.strftime("%x %X")
+
 
 def format_decimal(input, multiplier=100):
     if input is not None:
-        return round(float(input) * multiplier, 2) 
+        return round(float(input) * multiplier, 2)
     return None
