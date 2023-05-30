@@ -41,9 +41,10 @@ class Register(Resource):
         first_name = request.form['first_name']
         last_name = request.form['last_name']
 
-        if account_type == 'teacher':
-            return teacher.create_teacher(first_name, last_name, username, password)
-        elif account_type == 'student':
-            return student.create_student(first_name, last_name, username, password)
-        else:
-            return 400
+        if account_type in ['teacher', 'student']:
+            register_func = teacher.create_teacher if account_type == 'teacher' else student.create_student
+            result = register_func(first_name, last_name, username, password)
+            if result:
+                return 201
+
+        return 400

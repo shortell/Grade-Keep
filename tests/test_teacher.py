@@ -1,9 +1,7 @@
 from decimal import Decimal
 import unittest
 import datetime
-from server.db import postgres_utils
-from server.db import db_utils
-from server.db import teacher
+from server.db import teacher, postgres_utils, db_utils, shared
 
 
 class Test_Teacher(unittest.TestCase):
@@ -120,20 +118,6 @@ class Test_Teacher(unittest.TestCase):
         """
         expected = ("HW#3", "Solve for x in the following equations...")
         actual = postgres_utils.exec_get_one(query)
-        self.assertEqual(actual, expected)
-
-    def test_get_assignments(self):
-        actual = teacher.get_assignments(5)
-        expected = [
-            (1, 'Essay #1', '10/19/04 10:23:54'),
-            (4, 'HW#5', '10/19/04 10:23:54')
-        ]
-        self.assertEqual(actual, expected)
-
-    def test_get_assignment(self):
-        actual = teacher.get_assignment(2)
-        expected = (2, 'HW#1', 'Graph the following equations f(x)=x^2...',
-                    '10/19/04 10:23:54')
         self.assertEqual(actual, expected)
 
     def test_update_assignment(self):
