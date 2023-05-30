@@ -190,3 +190,4 @@ class T_Score(Resource):
             points_earned = request.form['points_earned']
             comments = request.form['comments']
             teacher.update_score(score_id, points_earned, comments)
+            return 200

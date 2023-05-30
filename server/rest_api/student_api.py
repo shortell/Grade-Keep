@@ -99,9 +99,9 @@ class S_Grades(Resource):
                          for record in grades] if grades is not None else []
             session["grade_ids"] = grade_ids
             return course_avg, grades
-        
+
+
 class S_Scores(Resource):
     def get(self, course_id, grade_id):
         if rest_utils.is_session_valid("teacher") and rest_utils.is_grade_authorized(course_id, grade_id):
             return student.get_score(grade_id)
-
