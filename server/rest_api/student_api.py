@@ -69,7 +69,8 @@ class S_Submissions(Resource):
 
     def get(self, course_id, assignment_id):
         if rest_utils.is_session_valid("student") and rest_utils.is_assignment_authorized(course_id, assignment_id):
-            submissions = student.get_submission(assignment_id)
+            id = session["id"]
+            submissions = student.get_submission(id, assignment_id)
             submission_ids = [record[0]
                               for record in submissions] if submissions is not None else []
             session["submission_ids"] = submission_ids
@@ -91,17 +92,18 @@ class S_Submission(Resource):
 
 class S_Grades(Resource):
     def get(self, course_id):
-        if rest_utils.is_session_valid("teacher") and rest_utils.is_course_authorized(course_id):
-            course_avg = student.get_score_average_by_course(
+        if rest_utils.is_session_valid("student") and rest_utils.is_course_authorized(course_id):
+            course_avg = student.get_score_average_by_course( # to be used
                 session["id"], course_id)
             grades = student.get_grades(session["id"], course_id)
             grade_ids = [record[0]
                          for record in grades] if grades is not None else []
             session["grade_ids"] = grade_ids
-            return course_avg, grades
+            return grades
 
 
 class S_Scores(Resource):
     def get(self, course_id, grade_id):
-        if rest_utils.is_session_valid("teacher") and rest_utils.is_grade_authorized(course_id, grade_id):
-            return student.get_score(grade_id)
+        if rest_utils.is_session_valid("student") and rest_utils.is_grade_authorized(course_id, grade_id):
+            id = session["id"]
+            return student.get_score(id, grade_id)

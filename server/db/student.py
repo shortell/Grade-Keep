@@ -196,11 +196,16 @@ def get_submission(student_id, assignment_id):
         and the timestamp when it was turned in. Returns None if no submission is found for the provided student and assignment.
     """
     query = """
-    SELECT response, turned_in
+    SELECT id, response, turned_in
     FROM submissions
     WHERE student_id = %s AND assignment_id = %s;
     """
-    return exec_get_one(query, (student_id, assignment_id))
+    submissions = exec_get_all(query, (student_id, assignment_id))
+    formatted = []
+    for record in submissions:
+        formatted.append((record[0], record[1], timestamp_to_str(record[2])))
+
+    return formatted
 
 
 def update_submission(submission_id, response):
@@ -284,7 +289,12 @@ def get_grades(student_id, course_id):
     WHERE grades.course_id = %s AND scores.student_id = %s
     ORDER BY posted DESC;
     """
-    return exec_get_all(query, (course_id, student_id))
+    grades = exec_get_all(query, (course_id, student_id))
+    formatted = []
+    for record in grades:
+        formatted.append((record[0], record[1], format_decimal(
+            record[2]), timestamp_to_str(record[3])))
+    return formatted
 
 
 def get_score(student_id, grade_id):
@@ -306,4 +316,5 @@ def get_score(student_id, grade_id):
     INNER JOIN grades ON scores.grade_id = grades.id
     WHERE scores.student_id = %s AND scores.grade_id = %s;
     """
-    return exec_get_one(query, (student_id, grade_id))
+    score = exec_get_one(query, (student_id, grade_id))
+    return (score[0], score[1], format_decimal(score[2], 1), format_decimal(score[3], 1), score[4])
