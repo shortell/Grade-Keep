@@ -78,9 +78,9 @@ class Test_Student(unittest.TestCase):
         query = """
         SELECT id, response, assignment_id, student_id
         FROM submissions
-        WHERE id = 7;
+        WHERE id = 9;
         """
-        expected = (7, "this is a response", 1, 1)
+        expected = (9, "this is a response", 1, 1)
         actual = postgres_utils.exec_get_one(query)
         self.assertEqual(actual, expected)
 

@@ -177,12 +177,12 @@ class Test_Teacher(unittest.TestCase):
         query = """
         SELECT *
         FROM scores
-        WHERE grade_id = 5;
+        WHERE grade_id = 9;
         """
         cur.execute(query)
         expected = [
-            (13, None, '', 5, 1),
-            (14, None, '', 5, 3)
+            (16, None, '', 9, 1),
+            (17, None, '', 9, 3)
         ]
         actual = cur.fetchall()
         self.assertEqual(actual, expected)
