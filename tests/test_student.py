@@ -85,8 +85,7 @@ class Test_Student(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_get_submission(self):
-        expected = ('Lorem ipsum...', datetime.datetime(
-            2004, 10, 19, 10, 23, 54))
+        expected = [(1, 'Lorem ipsum...', '10/19/04 10:23:54')]
         actual = student.get_submission(1, 1)
         self.assertEqual(actual, expected)
 
@@ -119,20 +118,20 @@ class Test_Student(unittest.TestCase):
         expected = [
             (4,
              'HW#4',
-             Decimal('0.90000000000000000000'),
-             datetime.datetime(2004, 10, 25, 10, 23, 54)),
+             90,
+             '10/25/04 10:23:54'),
             (3,
              'HW#3',
-             Decimal('0.75000000000000000000'),
-             datetime.datetime(2004, 10, 23, 10, 23, 54)),
+             75,
+             '10/23/04 10:23:54'),
             (2,
              'HW#2',
-             Decimal('0E-20'),
-             datetime.datetime(2004, 10, 21, 10, 23, 54)),
+             0,
+             '10/21/04 10:23:54'),
             (1,
              'HW#1',
-             Decimal('0.50000000000000000000'),
-             datetime.datetime(2004, 10, 19, 10, 23, 54))
+             50,
+             '10/19/04 10:23:54')
         ]
         actual = student.get_grades(1, 1)
         self.assertEqual(actual, expected)
