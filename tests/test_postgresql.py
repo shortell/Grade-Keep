@@ -1,11 +1,11 @@
 import unittest
-from database.postgres_utils import exec_get_one
+from server.db import postgres_utils
 
 
 class TestPostgreSQL(unittest.TestCase):
 
     def test_can_connect(self):
-        result = exec_get_one('SELECT VERSION()')
+        result = postgres_utils.exec_get_one('SELECT VERSION()')
         self.assertTrue(result[0].startswith('PostgreSQL'))
 
 

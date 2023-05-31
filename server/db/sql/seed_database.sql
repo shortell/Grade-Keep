@@ -51,6 +51,10 @@ INSERT INTO submissions (response, turned_in, assignment_id, student_id) -- id: 
 VALUES ('U', '2004-10-19 10:23:54', 2, 2);
 INSERT INTO submissions (response, turned_in, assignment_id, student_id) -- id: 6
 VALUES ('U', '2004-10-19 10:23:54', 2, 3);
+INSERT INTO submissions (response, turned_in, assignment_id, student_id) -- id: 7
+VALUES ('U', '2004-10-19 10:23:54', 3, 2);
+INSERT INTO submissions (response, turned_in, assignment_id, student_id) -- id: 8
+VALUES ('modmaosdmaspodm', '2004-10-19 10:23:54', 3, 3);
 
 -- enrollments
 INSERT INTO enrollments (student_id, course_id) -- id: 1
@@ -71,6 +75,14 @@ INSERT INTO grades (title, total_points, posted, course_id) -- id: 3
 VALUES ('HW#3', 100, '2004-10-23 10:23:54', 1);
 INSERT INTO grades (title, total_points, posted, course_id) -- id: 4
 VALUES ('HW#4', 100, '2004-10-25 10:23:54', 1);
+INSERT INTO grades (title, total_points, posted, course_id) -- id: 5
+VALUES ('HW#1', 100, '2004-10-19 10:23:54', 2);
+INSERT INTO grades (title, total_points, posted, course_id) -- id: 6
+VALUES ('HW#2', 100, '2004-10-21 10:23:54', 2);
+INSERT INTO grades (title, total_points, posted, course_id) -- id: 7
+VALUES ('HW#3', 100, '2004-10-23 10:23:54', 2);
+INSERT INTO grades (title, total_points, posted, course_id) -- id: 8
+VALUES ('HW#4', 100, '2004-10-25 10:23:54', 2);
 
 
 -- scores
@@ -79,7 +91,7 @@ VALUES (50, 1, 1);
 INSERT INTO scores (points_earned, grade_id, student_id) -- id: 2
 VALUES (70, 1, 2);
 INSERT INTO scores (points_earned, grade_id, student_id) -- id: 3
-VALUES (20, 1, 3);
+VALUES (NULL, 1, 3);
 
 INSERT INTO scores (points_earned, grade_id, student_id) -- id: 4
 VALUES (0, 2, 1);
@@ -101,3 +113,10 @@ INSERT INTO scores (points_earned, grade_id, student_id) -- id: 11
 VALUES (100, 4, 2);
 INSERT INTO scores (points_earned, grade_id, student_id) -- id: 12
 VALUES (100, 4, 3);
+
+INSERT INTO scores (points_earned, grade_id, student_id) -- id: 10
+VALUES (90, 5, 1);
+INSERT INTO scores (points_earned, grade_id, student_id) -- id: 11
+VALUES (100, 5, 2);
+INSERT INTO scores (points_earned, grade_id, student_id) -- id: 12
+VALUES (100, 5, 3);
