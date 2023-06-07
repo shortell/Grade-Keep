@@ -1,11 +1,17 @@
 import './App.css';
-import {Container, Typography} from '@mui/material';
+import SignIn from './pages/SignIn';
+import SignUp from './pages/SignUp';
+import { Route, Routes } from "react-router-dom"
 
 function App() {
   return (
-    <Container sx={{ bgcolor: "#ccc", height: "100vh"}}>
-      <Typography variant='h1'>Hello World!</Typography>
-    </Container>
+    <Routes>
+      <Route path="/signin" element={<SignIn />} />
+      <Route path="/signup" element={<SignUp />} />
+
+    </Routes>
+
+
   );
 }
 

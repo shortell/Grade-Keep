@@ -1,6 +1,10 @@
-from flask import session
+from flask import session, make_response
 from flask_restful import abort
 
+def create_response(data, status_code):
+    response = make_response(data)
+    response.status_code = status_code
+    return response
 
 def is_logged_in():
     return session.get("id") is not None

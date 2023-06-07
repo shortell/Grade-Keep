@@ -58,4 +58,5 @@ if __name__ == '__main__':
     app = create_app()
     db_utils.initialize_database()
     db_utils.seed_database()
+    print("initializing and seeding database")
     app.run(debug=True)

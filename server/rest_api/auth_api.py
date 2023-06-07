@@ -8,9 +8,10 @@ class Login(Resource):
         return 200
 
     def post(self):
-        account_type = request.form['account_type']
-        username = request.form['username']
-        password = request.form['password']
+        data = request.get_json()
+        account_type = data.get('account_type')
+        username = data.get('username')
+        password = data.get('password')
 
         if account_type in ['teacher', 'student']:
             login_func = teacher.login if account_type == 'teacher' else student.login
@@ -19,6 +20,7 @@ class Login(Resource):
             if result is not None:
                 session['account_type'] = account_type
                 session['id'] = result[0]
+                print("logged in")
                 return 200
 
         return 400
@@ -35,16 +37,17 @@ class Register(Resource):
         return 200
 
     def post(self):
-        account_type = request.form['account_type']
-        username = request.form['username']
-        password = request.form['password']
-        first_name = request.form['first_name']
-        last_name = request.form['last_name']
-
+        data = request.get_json()
+        account_type = data.get('account_type')
+        username = data.get('username')
+        password = data.get('password')
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
         if account_type in ['teacher', 'student']:
             register_func = teacher.create_teacher if account_type == 'teacher' else student.create_student
             result = register_func(first_name, last_name, username, password)
             if result:
+                print("account created")
                 return 201
-
-        return 400
+            return {403: "username taken"}
+        
