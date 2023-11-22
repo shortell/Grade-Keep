@@ -1,6 +1,11 @@
 from .postgres_utils import exec_get_all, exec_get_one
 
 
+"""
+functions that are shared by both students and teachers
+"""
+
+
 def __format_assignments(assignments):
     """
     helper function
