@@ -6,6 +6,7 @@ from rest_api import rest_utils
 
 class Students(Resource):
     def get(self):
+        print(session + " student_api.py")
         if rest_utils.is_session_valid("student"):
             id = session["id"]
             return student.get_student(id)

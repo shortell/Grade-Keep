@@ -3,10 +3,12 @@ from flask_restful import abort
 
 
 def is_logged_in():
+    print(session + " rest_utils / is_logged_in")
     return session.get("id") is not None
 
 
 def is_role(role):
+    print(session + " rest_utils / is_role")
     return session.get("account_type") == role
 
 
